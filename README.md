@@ -1,4 +1,4 @@
-# ucsd_cse232b_xquery
+# ucsd_cse232b_project
 A xquery processor for ucsd cse 232b courser project
 ## Project file structure
 1. Docs: contains first hand from ucsd cse 232b course or helpful notes of collaborator
@@ -20,11 +20,11 @@ Due by Feb 7, finish naive xpath evaluator.
 
 ### Finished
 1. packaged XPathEvaluator based on rxcay's work
-	- under root dir:
+	- (under root dir):
 	- compile and package:(no test now)
-				mvn package
+		-		mvn package
 	- usage
-				java -jar target/CSE-232B-M1.jar src/test/resources/XPath0.txt
+		- 		java -jar target/CSE-232B-M1.jar src/test/resources/XPath0.txt
 	- then the xpath_result.xml will appear under root dir
 
 ### TBD
