@@ -12,7 +12,7 @@ A xquery processor for ucsd cse 232b courser project
 		- test
 			- resources
 				- XPath0.txt
-	- target
+	- target(This folder will be hidden according to gitignore)
 		- CSE-232B-M1.jar
 
 ## [Milestone 1](https://github.com/champion-chenpeng/ucsd_cse232b_xquery/milestone/1)
@@ -26,19 +26,24 @@ Due by Feb 7, finish naive xpath evaluator.
 	- usage
 		- 		java -jar target/CSE-232B-M1.jar src/test/resources/XPath0.txt
 	- then the xpath_result.xml will appear under root dir
+2. Test
+	- run under root dir
+		- 		mvn test
+	- current tests:
+		- SingleQueryTest: test one-line input file query without content check
+		- ContentCompareTest: compare the query result of current version with a stable version, currently just compare the text, further can compare the DOM tree. (But with same JAXP API, the same DOM tree lead to same XML)
 
 ### TBD
 1. Optimize the implementation the project. (To make sure originality), directions:
-	- OOD, 
-		- ex. remove helpers etc
+	- OOD in Engine
+		- modify helpers 
+		- remove global variable paramNodes
 	- [ ] simplicity,
-		- ex. use regular expression in .g4 (|) to simply it
+		- ~~ex. use regular expression in .g4 (|) to simply it~~(Expand all the or case and use label to be more modularized in Visitor design)
 2. add tests to cover all the test case from instructor
-	- [ ] 5 xpath query string
-		- modify the Main interface
-			- read queries line by line, and output correspondingly
-		- modify the XMLProcessor
-			- store all the data, instead of DEFAULT
+	- ~~[ ] 5 xpath query string~~(Instructor said only one query per input file)
+	- modify the XMLProcessor
+		- store all the data, instead of DEFAULT
 	- additional query
 	- Autometically check the answer? (manually is acceptible)
 
