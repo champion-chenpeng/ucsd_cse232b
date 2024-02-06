@@ -19,7 +19,7 @@ A xquery processor for ucsd cse 232b courser project
 Due by Feb 7, finish naive xpath evaluator.
 
 ### Finished
-1. packaged XPathEvaluator based on rxcay's work
+1. packaged XPathEvaluator
 	- (under root dir):
 	- compile and package:(no test now)
 		-		mvn package
@@ -28,7 +28,7 @@ Due by Feb 7, finish naive xpath evaluator.
 	- then the xpath_result.xml will appear under root dir
 
 ### TBD
-1. Optimize the implementation and structure of rxcay's project. (To make sure originality), directions:
+1. Optimize the implementation the project. (To make sure originality), directions:
 	- OOD, 
 		- ex. remove helpers etc
 	- simplicity,
