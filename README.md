@@ -50,3 +50,17 @@ Due by Feb 7, finish naive xpath evaluator.
 3. Green parts: 3rd party tools
 4. Blue parts: output program
 
+### Project Design
+![Project Design](Docs/Project_Design.png)
+
+#### Entry
+		java -jar M1.jar XPathFilename.txt
+
+#### Main
+The main interface, give argvs, get output xml file.
+
+#### Engine(Visitor)
+The engine, put parser tree(AST) into visit method of the engine, get the output DOM nodes.
+
+#### XMLProcessor
+XML-DOM parser and serializer.
