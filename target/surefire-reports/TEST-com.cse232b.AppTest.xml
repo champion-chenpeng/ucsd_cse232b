@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="com.cse232b.AppTest" time="0.041" tests="1" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="com.cse232b.AppTest" time="0.414" tests="2" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="20"/>
     <property name="sun.jnu.encoding" value="UTF-8"/>
-    <property name="java.class.path" value="/Users/champion/Library/CloudStorage/OneDrive-UCSanDiego/UCSD/Course/wi24/cse232b/XPathEvaluator/target/test-classes:/Users/champion/Library/CloudStorage/OneDrive-UCSanDiego/UCSD/Course/wi24/cse232b/XPathEvaluator/target/classes:/Users/champion/.m2/repository/junit/junit/4.13.2/junit-4.13.2.jar:/Users/champion/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/Users/champion/.m2/repository/org/antlr/antlr4-runtime/4.7.2/antlr4-runtime-4.7.2.jar:"/>
+    <property name="java.class.path" value="/Users/champion/Library/CloudStorage/OneDrive-UCSanDiego/UCSD/Course/wi24/cse232b/XPathEvaluator/target/test-classes:/Users/champion/Library/CloudStorage/OneDrive-UCSanDiego/UCSD/Course/wi24/cse232b/XPathEvaluator/target/classes:/Users/champion/.m2/repository/junit/junit/4.13.2/junit-4.13.2.jar:/Users/champion/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/Users/champion/.m2/repository/commons-io/commons-io/2.15.1/commons-io-2.15.1.jar:/Users/champion/.m2/repository/org/antlr/antlr4-runtime/4.7.2/antlr4-runtime-4.7.2.jar:"/>
     <property name="java.vm.vendor" value="Oracle Corporation"/>
     <property name="sun.arch.data.model" value="64"/>
     <property name="java.vendor.url" value="https://java.oracle.com/"/>
@@ -12,9 +12,9 @@
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="user.country" value="US"/>
     <property name="sun.boot.library.path" value="/Library/Java/JavaVirtualMachines/jdk-20.jdk/Contents/Home/lib"/>
-    <property name="sun.java.command" value="/Users/champion/Library/CloudStorage/OneDrive-UCSanDiego/UCSD/Course/wi24/cse232b/XPathEvaluator/target/surefire/surefirebooter-20240205155354217_3.jar /Users/champion/Library/CloudStorage/OneDrive-UCSanDiego/UCSD/Course/wi24/cse232b/XPathEvaluator/target/surefire 2024-02-05T15-53-54_080-jvmRun1 surefire-20240205155354217_1tmp surefire_0-20240205155354217_2tmp"/>
+    <property name="sun.java.command" value="/Users/champion/Library/CloudStorage/OneDrive-UCSanDiego/UCSD/Course/wi24/cse232b/XPathEvaluator/target/surefire/surefirebooter-20240205223604237_3.jar /Users/champion/Library/CloudStorage/OneDrive-UCSanDiego/UCSD/Course/wi24/cse232b/XPathEvaluator/target/surefire 2024-02-05T22-36-04_188-jvmRun1 surefire-20240205223604237_1tmp surefire_0-20240205223604237_2tmp"/>
     <property name="jdk.debug" value="release"/>
-    <property name="surefire.test.class.path" value="/Users/champion/Library/CloudStorage/OneDrive-UCSanDiego/UCSD/Course/wi24/cse232b/XPathEvaluator/target/test-classes:/Users/champion/Library/CloudStorage/OneDrive-UCSanDiego/UCSD/Course/wi24/cse232b/XPathEvaluator/target/classes:/Users/champion/.m2/repository/junit/junit/4.13.2/junit-4.13.2.jar:/Users/champion/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/Users/champion/.m2/repository/org/antlr/antlr4-runtime/4.7.2/antlr4-runtime-4.7.2.jar:"/>
+    <property name="surefire.test.class.path" value="/Users/champion/Library/CloudStorage/OneDrive-UCSanDiego/UCSD/Course/wi24/cse232b/XPathEvaluator/target/test-classes:/Users/champion/Library/CloudStorage/OneDrive-UCSanDiego/UCSD/Course/wi24/cse232b/XPathEvaluator/target/classes:/Users/champion/.m2/repository/junit/junit/4.13.2/junit-4.13.2.jar:/Users/champion/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/Users/champion/.m2/repository/commons-io/commons-io/2.15.1/commons-io-2.15.1.jar:/Users/champion/.m2/repository/org/antlr/antlr4-runtime/4.7.2/antlr4-runtime-4.7.2.jar:"/>
     <property name="sun.cpu.endian" value="little"/>
     <property name="user.home" value="/Users/champion"/>
     <property name="user.language" value="en"/>
@@ -28,7 +28,7 @@
     <property name="java.specification.name" value="Java Platform API Specification"/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="apple.awt.application.name" value="ForkedBooter"/>
-    <property name="surefire.real.class.path" value="/Users/champion/Library/CloudStorage/OneDrive-UCSanDiego/UCSD/Course/wi24/cse232b/XPathEvaluator/target/surefire/surefirebooter-20240205155354217_3.jar"/>
+    <property name="surefire.real.class.path" value="/Users/champion/Library/CloudStorage/OneDrive-UCSanDiego/UCSD/Course/wi24/cse232b/XPathEvaluator/target/surefire/surefirebooter-20240205223604237_3.jar"/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
     <property name="java.runtime.version" value="20.0.1+9-29"/>
     <property name="user.name" value="champion"/>
@@ -54,5 +54,6 @@
     <property name="sun.io.unicode.encoding" value="UnicodeBig"/>
     <property name="java.class.version" value="64.0"/>
   </properties>
-  <testcase name="shouldAnswerWithTrue" classname="com.cse232b.AppTest" time="0.002"/>
+  <testcase name="SingleQueryTest" classname="com.cse232b.AppTest" time="0.383"/>
+  <testcase name="ContentCompareTest" classname="com.cse232b.AppTest" time="0.009"/>
 </testsuite>
