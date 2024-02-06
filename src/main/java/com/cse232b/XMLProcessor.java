@@ -23,10 +23,26 @@ import java.util.List;
  * @description
  */
 public class XMLProcessor {
-    public static final String DEFAULT_XML_DATA_FILE_NAME = "j_caesar.xml";
     public static final String DEFAULT_DTD_FILE_NAME = "play.dtd";
     static DocumentBuilderFactory docBldFactory = DocumentBuilderFactory.newInstance();
     static TransformerFactory transformerFactory = TransformerFactory.newInstance();
+
+    public static List<Node> parse(String xmlFileNameInXPath) 
+             throws ParserConfigurationException, IOException, SAXException {
+        InputStream dataFileStream = XMLProcessor.class.getClassLoader().getResourceAsStream(xmlFileNameInXPath);
+        InputStream dtdFileStream = XMLProcessor.class.getClassLoader().getResourceAsStream(DEFAULT_DTD_FILE_NAME);
+        List<Node> res = loadXMLDataFileToDomNodes(dataFileStream,dtdFileStream);
+        dataFileStream.close();
+        dtdFileStream.close();
+        return res;
+    }
+
+    public static void serialize(List<Node> rawResult, OutputStream oStream, boolean addResEle)
+            throws ParserConfigurationException, TransformerException {
+        Document doc = addResEle ? generateResultXMLAddingResultEle(rawResult) : generateResultXMLRaw(rawResult);
+            writeXMLDoc(doc,oStream);
+    }
+
     private static List<Node> loadXMLDataFileToDomNodes(InputStream xmlDataFileStream,InputStream dtdStream)
             throws ParserConfigurationException, IOException, SAXException {
         List<Node> res = new LinkedList<>();
@@ -45,24 +61,6 @@ public class XMLProcessor {
         return res;
     }
 
-    static List<Node> loadDefaultDataFileFromResource()
-             throws ParserConfigurationException, IOException, SAXException {
-        InputStream dataFileStream = XMLProcessor.class.getClassLoader().getResourceAsStream(DEFAULT_XML_DATA_FILE_NAME);
-        InputStream dtdFileStream = XMLProcessor.class.getClassLoader().getResourceAsStream(DEFAULT_DTD_FILE_NAME);
-        List<Node> res = loadXMLDataFileToDomNodes(dataFileStream,dtdFileStream);
-        dataFileStream.close();
-        dtdFileStream.close();
-        return res;
-    }
-
-    // temporary
-    public static List<Node> checkFileNameAndGetNodes(String xmlFileNameInXPath) throws Exception {
-        if(DEFAULT_XML_DATA_FILE_NAME.equals(xmlFileNameInXPath)) {
-            return loadDefaultDataFileFromResource();
-        } else {
-            throw new Exception("XML data file is not in resources");
-        }
-    }
     public static Document generateResultXMLRaw(List<Node> rawResult) throws ParserConfigurationException {
         DocumentBuilder bd = docBldFactory.newDocumentBuilder();
         Document outputDoc = bd.newDocument();
@@ -103,9 +101,4 @@ public class XMLProcessor {
         transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
         transformer.transform(new DOMSource(outputDoc),new StreamResult(oStream));}
 
-    public static void generateResultXMLThenOutput(List<Node> rawResult, OutputStream oStream, boolean addResEle)
-            throws ParserConfigurationException, TransformerException {
-        Document doc = addResEle ? generateResultXMLAddingResultEle(rawResult) : generateResultXMLRaw(rawResult);
-            writeXMLDoc(doc,oStream);
-    }
 }
