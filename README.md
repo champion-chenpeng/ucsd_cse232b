@@ -31,10 +31,14 @@ Due by Feb 7, finish naive xpath evaluator.
 1. Optimize the implementation the project. (To make sure originality), directions:
 	- OOD, 
 		- ex. remove helpers etc
-	- simplicity,
+	- [ ] simplicity,
 		- ex. use regular expression in .g4 (|) to simply it
 2. add tests to cover all the test case from instructor
-	- 5 xpath query string
+	- [ ] 5 xpath query string
+		- modify the Main interface
+			- read queries line by line, and output correspondingly
+		- modify the XMLProcessor
+			- store all the data, instead of DEFAULT
 	- additional query
 	- Autometically check the answer? (manually is acceptible)
 
