@@ -35,6 +35,7 @@ public class AppTest
 	public void ContentCompareTest() {
 		try {
 			for (int i = 0; i < Ncase; i++) {
+				System.out.println("Compare File %d".formatted(i));
 				InputStream ResultInStream = new FileInputStream("target/test-classes/XPath%d_result.xml".formatted(i));
 				InputStream RefInStream = new FileInputStream("src/test/resources/XPath%d_result_standard.xml".formatted(i));
 				assert(IOUtils.contentEquals(RefInStream, ResultInStream));	
