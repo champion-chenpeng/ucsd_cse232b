@@ -249,27 +249,27 @@ public class Engine extends XPathBaseVisitor<List<Node>> {
 
     }
 
+    private List<Node> filterCollectVisitHelper(List<Node> origin, Predicate<Node> rule) {
+        return origin.stream()
+                .filter(rule)
+                .collect(Collectors.toCollection(LinkedList::new));
+    }
+
+
+
     @Override
-    public List<Node> visitStringFilter(XPathParser.StringFilterContext ctx) {
+    public List<Node> visitRpFilter(XPathParser.RpFilterContext ctx) {
         List<Node> origin = paramNodes;
         return filterCollectVisitHelper(origin,
                 node -> {
                     List<Node> oneNodeList = new LinkedList<>();
                     oneNodeList.add(node);
                     setPNodes(oneNodeList);
-                    List<Node> res1 = visit(ctx.rp());
-                    // setPNodes(oneNodeList);
-					String stringConstant = ctx.stringConstant().ID().getText();
-                    for (Node x : res1) {
-                        if (x.getTextContent().equals(stringConstant)) {
-                            return true;
-                        }
-                    }
-                    return false;
+                    List<Node> res = visit(ctx.rp());
+                    return res.size() > 0;
                 }
         );
     }
-
 
     @Override
     public List<Node> visitEqFilter(XPathParser.EqFilterContext ctx) {
@@ -295,29 +295,6 @@ public class Engine extends XPathBaseVisitor<List<Node>> {
     }
 
     @Override
-    public List<Node> visitNotFilter(XPathParser.NotFilterContext ctx) {
-        List<Node> origin = paramNodes;
-        setPNodes(origin);
-        List<Node> filteredF = visit(ctx.f());
-        HashSet<Node> s = new HashSet<>(filteredF);
-        return filterCollectVisitHelper(origin, node -> !s.contains(node));
-    }
-
-    @Override
-    public List<Node> visitAndFilter(XPathParser.AndFilterContext ctx) {
-        List<Node> origin = paramNodes;
-        setPNodes(origin);
-        List<Node> filteredWithF1 = visit(ctx.f(0));
-        setPNodes(filteredWithF1);
-        return visit(ctx.f(1));
-    }
-
-    @Override
-    public List<Node> visitBracketFilter(XPathParser.BracketFilterContext ctx) {
-        return visit(ctx.f());
-    }
-
-    @Override
     public List<Node> visitIsFilter(XPathParser.IsFilterContext ctx) {
         List<Node> origin = paramNodes;
         return filterCollectVisitHelper(origin,
@@ -340,24 +317,39 @@ public class Engine extends XPathBaseVisitor<List<Node>> {
         );
     }
 
-    private List<Node> filterCollectVisitHelper(List<Node> origin, Predicate<Node> rule) {
-        return origin.stream()
-                .filter(rule)
-                .collect(Collectors.toCollection(LinkedList::new));
-    }
-
     @Override
-    public List<Node> visitRpFilter(XPathParser.RpFilterContext ctx) {
+    public List<Node> visitStringFilter(XPathParser.StringFilterContext ctx) {
         List<Node> origin = paramNodes;
         return filterCollectVisitHelper(origin,
                 node -> {
                     List<Node> oneNodeList = new LinkedList<>();
                     oneNodeList.add(node);
                     setPNodes(oneNodeList);
-                    List<Node> res = visit(ctx.rp());
-                    return res.size() > 0;
+                    List<Node> res1 = visit(ctx.rp());
+                    // setPNodes(oneNodeList);
+					String stringConstant = ctx.stringConstant().ID().getText();
+                    for (Node x : res1) {
+                        if (x.getTextContent().equals(stringConstant)) {
+                            return true;
+                        }
+                    }
+                    return false;
                 }
         );
+    }
+
+    @Override
+    public List<Node> visitBracketFilter(XPathParser.BracketFilterContext ctx) {
+        return visit(ctx.f());
+    }
+
+    @Override
+    public List<Node> visitAndFilter(XPathParser.AndFilterContext ctx) {
+        List<Node> origin = paramNodes;
+        setPNodes(origin);
+        List<Node> filteredWithF1 = visit(ctx.f(0));
+        setPNodes(filteredWithF1);
+        return visit(ctx.f(1));
     }
 
     @Override
@@ -371,6 +363,15 @@ public class Engine extends XPathBaseVisitor<List<Node>> {
         HashSet<Node> s2 = new HashSet<>(rf2);
         return filterCollectVisitHelper(origin,
                 node -> s1.contains(node) || s2.contains(node));
+    }
+
+    @Override
+    public List<Node> visitNotFilter(XPathParser.NotFilterContext ctx) {
+        List<Node> origin = paramNodes;
+        setPNodes(origin);
+        List<Node> filteredF = visit(ctx.f());
+        HashSet<Node> s = new HashSet<>(filteredF);
+        return filterCollectVisitHelper(origin, node -> !s.contains(node));
     }
 
     // never called. visit return at tagRP
