@@ -373,28 +373,4 @@ public class Engine extends XPathBaseVisitor<List<Node>> {
         HashSet<Node> s = new HashSet<>(filteredF);
         return filterCollectVisitHelper(origin, node -> !s.contains(node));
     }
-
-    // never called. visit return at tagRP
-    @Override
-    public List<Node> visitTagName(XPathParser.TagNameContext ctx) {
-        return super.visitTagName(ctx);
-    }
-
-    // never called. visit return at attrRP/
-    @Override
-    public List<Node> visitAttrName(XPathParser.AttrNameContext ctx) {
-        return super.visitAttrName(ctx);
-    }
-
-    // never called. visit return at visitDoc.
-    @Override
-    public List<Node> visitFileName(XPathParser.FileNameContext ctx) {
-        return super.visitFileName(ctx);
-    }
-
-    // never called. visit return at visitDoc.
-    @Override
-    public List<Node> visitStringConstant(XPathParser.StringConstantContext ctx) {
-        return super.visitStringConstant(ctx);
-    }
 }
