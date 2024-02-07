@@ -16,17 +16,16 @@ import java.util.List;
  */
 public class AppTest 
 {
+	private int Ncase = 5;
     /**
 	 * Test whether the pipeline runs well
      */
     @Test
 	public void SingleQueryTest() {
-		try (
-			InputStream testXPathInStream = AppTest.class.getClassLoader().getResourceAsStream("XPath0.txt");
-			OutputStream testXPathOutStream = new FileOutputStream("XPath0_result.xml");
-		) {
-			List<Node> rawResult = XPathEvaluator.evaluateXPath(testXPathInStream);
-			XMLProcessor.generateResultXMLThenOutput(rawResult, testXPathOutStream, true);
+		try {
+			for (int i = 0; i < Ncase; i++) {
+				Main.main(new String[] { "src/test/resources/XPath%d.txt".formatted(i), "target/test-classes/XPath%d_result.xml".formatted(i) });
+			}
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
@@ -34,11 +33,13 @@ public class AppTest
 
 	@Test
 	public void ContentCompareTest() {
-		try (
-			InputStream ResultInStream = new FileInputStream("XPath0_result.xml");
-			InputStream RefInStream = new FileInputStream("XPath0_result_standard.xml");
-		) {
-			assert(IOUtils.contentEquals(RefInStream, ResultInStream));	
+		try {
+			for (int i = 0; i < Ncase; i++) {
+				System.out.println("Compare File %d".formatted(i));
+				InputStream ResultInStream = new FileInputStream("target/test-classes/XPath%d_result.xml".formatted(i));
+				InputStream RefInStream = new FileInputStream("src/test/resources/XPath%d_result_standard.xml".formatted(i));
+				assert(IOUtils.contentEquals(RefInStream, ResultInStream));	
+			}
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}

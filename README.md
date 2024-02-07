@@ -1,5 +1,10 @@
 # ucsd_cse232b_project
 A xquery processor for ucsd cse 232b courser project
+
+## Usage
+		mvn package
+		java -jar target/CSE-232B-M1.jar path/to/single\_query\_xpath.txt path/to/output.xml
+
 ## Project file structure
 1. Docs: contains first hand from ucsd cse 232b course or helpful notes of collaborator
 2. Maven java project structure
@@ -7,11 +12,15 @@ A xquery processor for ucsd cse 232b courser project
 		- main
 			- antlr
 			- java
+				- Main(Interface for use or test)
+				- Engine(The XPath visitor, main functional class)
+				- XMLProcessor(Contains the DOM-XML parser and serializer, maybe integrated into Main?)
 			- resources
 				- j_caesar.xml
 		- test
 			- resources
 				- XPath0.txt
+				- XPath0_result.xml
 	- target(This folder will be hidden according to gitignore)
 		- CSE-232B-M1.jar
 
@@ -32,6 +41,7 @@ Due by Feb 7, finish naive xpath evaluator.
 	- current tests:
 		- SingleQueryTest: test one-line input file query without content check
 		- ContentCompareTest: compare the query result of current version with a stable version, currently just compare the text, further can compare the DOM tree. (But with same JAXP API, the same DOM tree lead to same XML)
+		- intermediate files are stored in target/test-classes
 
 ### TBD
 1. Optimize the implementation the project. (To make sure originality), directions:
@@ -42,8 +52,12 @@ Due by Feb 7, finish naive xpath evaluator.
 		- ~~ex. use regular expression in .g4 (|) to simply it~~(Expand all the or case and use label to be more modularized in Visitor design)
 2. add tests to cover all the test case from instructor
 	- ~~[ ] 5 xpath query string~~(Instructor said only one query per input file)
+3. Refactor the project
+	- [x] optimize the project structure
+		- rename Engine->Main, QEngineVisitor->Engine
+		- remove XPathEvaluator and add evaluateXPath into Main
 	- modify the XMLProcessor
-		- store all the data, instead of DEFAULT
+		- [x] store all the data, instead of DEFAULT
 	- additional query
 	- Autometically check the answer? (manually is acceptible)
 
@@ -63,7 +77,7 @@ Due by Feb 7, finish naive xpath evaluator.
 ![Project Design](Docs/Project_Design.png)
 
 #### Entry
-		java -jar M1.jar XPathFilename.txt
+		java -jar M1.jar single_query_xpath.txt result.xml
 
 #### Main
 The main interface, give argvs, get output xml file.
