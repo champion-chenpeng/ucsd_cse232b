@@ -9,8 +9,7 @@ ap  : doc '/' rp    #singleAP
     ;
 
 // document
-doc : 'doc("' fileName '")'
-    | 'document("' fileName '")'
+doc : ('doc("' | 'document("') fileName '")'
     ;
 
 // relative path
@@ -40,7 +39,7 @@ f   : rp        #rpFilter
 
 tagName : ID;
 attrName : ID;
-stringConstant : '"' ID '"';
+stringConstant : ('"' | '\'') ID ('"' | '\'');
 
 EQ  : '=' | 'eq';
 IS  : '==' | 'is';

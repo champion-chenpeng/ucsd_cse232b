@@ -2,8 +2,8 @@
 A xquery processor for ucsd cse 232b courser project
 
 ## Usage
-		mvn package
-		java -jar target/CSE-232B-M1.jar path/to/single\_query\_xpath.txt path/to/output.xml
+	mvn package
+	java -jar target/CSE-232B-M1.jar path/to/single\_query\_xpath.txt path/to/output.xml
 
 ## Project file structure
 1. Docs: contains first hand from ucsd cse 232b course or helpful notes of collaborator
@@ -28,14 +28,7 @@ A xquery processor for ucsd cse 232b courser project
 Due by Feb 7, finish naive xpath evaluator.
 
 ### Finished
-1. packaged XPathEvaluator
-	- (under root dir):
-	- compile and package:(no test now)
-		-		mvn package
-	- usage
-		- 		java -jar target/CSE-232B-M1.jar src/test/resources/XPath0.txt
-	- then the xpath_result.xml will appear under root dir
-2. Test
+1. Test 5 query from instructor
 	- run under root dir
 		- 		mvn test
 	- current tests:
@@ -44,15 +37,7 @@ Due by Feb 7, finish naive xpath evaluator.
 		- intermediate files are stored in target/test-classes
 
 ### TBD
-1. Optimize the implementation the project. (To make sure originality), directions:
-	- OOD in Engine
-		- modify helpers 
-		- remove global variable paramNodes
-	- [ ] simplicity,
-		- ~~ex. use regular expression in .g4 (|) to simply it~~(Expand all the or case and use label to be more modularized in Visitor design)
-2. add tests to cover all the test case from instructor
-	- ~~[ ] 5 xpath query string~~(Instructor said only one query per input file)
-3. Refactor the project
+1. Refactor the project
 	- [x] optimize the project structure
 		- rename Engine->Main, QEngineVisitor->Engine
 		- remove XPathEvaluator and add evaluateXPath into Main
