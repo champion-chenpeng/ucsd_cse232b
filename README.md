@@ -2,57 +2,40 @@
 A xquery processor for ucsd cse 232b courser project
 
 ## Usage
+1. package and run mannually
 		mvn package
 		java -jar target/CSE-232B-M1.jar path/to/single\_query\_xpath.txt path/to/output.xml
-
-## Project file structure
-1. Docs: contains first hand from ucsd cse 232b course or helpful notes of collaborator
-2. Maven java project structure
-	- src
-		- main
-			- antlr
-			- java
-				- Main(Interface for use or test)
-				- Engine(The XPath visitor, main functional class)
-				- XMLProcessor(Contains the DOM-XML parser and serializer, maybe integrated into Main?)
-			- resources
-				- j_caesar.xml
-		- test
-			- resources
-				- XPath0.txt
-				- XPath0_result.xml
-	- target(This folder will be hidden according to gitignore)
-		- CSE-232B-M1.jar
-
-## [Milestone 1](https://github.com/champion-chenpeng/ucsd_cse232b_xquery/milestone/1)
-Due by Feb 7, finish naive xpath evaluator.
-
-### Finished
-1. packaged XPathEvaluator
-	- (under root dir):
-	- compile and package:(no test now)
-		-		mvn package
-	- usage
-		- 		java -jar target/CSE-232B-M1.jar src/test/resources/XPath0.txt
-	- then the xpath_result.xml will appear under root dir
-2. Test
-	- run under root dir
-		- 		mvn test
+2. test
+		mvn test
 	- current tests:
-		- SingleQueryTest: test one-line input file query without content check
-		- ContentCompareTest: compare the query result of current version with a stable version, currently just compare the text, further can compare the DOM tree. (But with same JAXP API, the same DOM tree lead to same XML)
-		- intermediate files are stored in target/test-classes
+		- 5 query string from instructor
+		- run and compare the content with some standard ones(with some standard versions, maybe 1.0)
 
-### TBD
+## Project Design
+![Project Design](Docs/Project_Design.png)
+
+### Entry
+		java -jar M1.jar single_query_xpath.txt result.xml
+
+### Main
+The main interface, give argvs, get output xml file.
+
+### Engine(Visitor)
+The engine, put parser tree(AST) into visit method of the engine, get the output DOM nodes.
+
+### [NEW!] FilterEngine(Visitor)
+The subengine, put in filterContext, get the Boolean indicates whether the filter hold at paramNode.
+
+### XMLProcessor
+XML-DOM parser and serializer.
+
+## TBD
 1. Optimize the implementation the project. (To make sure originality), directions:
 	- OOD in Engine
+		- principles: <200 line per file, < 20 methods per class
 		- modify helpers 
 		- remove global variable paramNodes
-	- [ ] simplicity,
-		- ~~ex. use regular expression in .g4 (|) to simply it~~(Expand all the or case and use label to be more modularized in Visitor design)
-2. add tests to cover all the test case from instructor
-	- ~~[ ] 5 xpath query string~~(Instructor said only one query per input file)
-3. Refactor the project
+2. Refactor the project
 	- [x] optimize the project structure
 		- rename Engine->Main, QEngineVisitor->Engine
 		- remove XPathEvaluator and add evaluateXPath into Main
@@ -60,7 +43,7 @@ Due by Feb 7, finish naive xpath evaluator.
 		- [x] store all the data, instead of DEFAULT
 	- additional query
 	- Autometically check the answer? (manually is acceptible)
-
+## Misc
 ### Project Architecture
 ![Project Architecture](Docs/Project_Architecture.png)
 #### Pink parts - to be implement
@@ -73,17 +56,6 @@ Due by Feb 7, finish naive xpath evaluator.
 3. Green parts: 3rd party tools
 4. Blue parts: output program
 
-### Project Design
-![Project Design](Docs/Project_Design.png)
+### [Milestone 1](https://github.com/champion-chenpeng/ucsd_cse232b_xquery/milestone/1)
+Due by Feb 7, finish naive xpath evaluator.
 
-#### Entry
-		java -jar M1.jar single_query_xpath.txt result.xml
-
-#### Main
-The main interface, give argvs, get output xml file.
-
-#### Engine(Visitor)
-The engine, put parser tree(AST) into visit method of the engine, get the output DOM nodes.
-
-#### XMLProcessor
-XML-DOM parser and serializer.
