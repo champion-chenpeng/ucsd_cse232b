@@ -25,7 +25,7 @@ public class Main
             System.out.println("usage java -jar CSE-232B-M1.jar one_xpath_query.txt result.xml");
         }
 		List<Node> rawEvaluateRes = xPathEvaluate(args[0]);
-        if( rawEvaluateRes == null ){
+        if( rawEvaluateRes == null || rawEvaluateRes.size() == 0){
             System.err.println("XPath evaluation failed. No result file generated.");
             return;
         }
@@ -36,9 +36,9 @@ public class Main
     private static List<Node> xPathEvaluate(String xPathFilePath) {
         List<Node> rawEvaluateRes = null;
         try(
-                InputStream xPathIStream = new FileInputStream(xPathFilePath)
+            InputStream xPathIStream = new FileInputStream(xPathFilePath)
         ) {
-             rawEvaluateRes = evaluateXPath(xPathIStream);
+            rawEvaluateRes = evaluateXPath(xPathIStream);
         } catch (IOException e) {
             System.err.println("open xPath file failed: " + e.getMessage());
         } catch (Exception e) {
@@ -61,7 +61,7 @@ public class Main
 
     private static void writeResultToFile(List<Node> rawRes, String fileName, boolean addResEle) {
         try(
-                OutputStream resultXMLOStream = new FileOutputStream(fileName)
+            OutputStream resultXMLOStream = new FileOutputStream(fileName)
         ) {
             XMLProcessor.serialize(rawRes, resultXMLOStream, addResEle);
         }  catch (IOException e) {
