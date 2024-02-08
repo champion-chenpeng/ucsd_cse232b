@@ -105,24 +105,18 @@ public class RpEngine extends XPathBaseVisitor<List<Node>> {
         }
         return res;
     }
-/*
+
     // not sure about this one
     @Override
     public List<Node> visitAttrRP(XPathParser.AttrRPContext ctx) {
         LinkedList<Node> res = new LinkedList<>();
-        for (Node node : paramNode) {
-            if(node.getNodeType() != Node.ELEMENT_NODE)
-                continue;
-            NamedNodeMap attributes = node.getAttributes(); // get all attributes of a node
-            for (int i = 0; i < attributes.getLength(); i++) {
-                res.add(attributes.item(i));
-            }
-        }
-        setPNode(res);
-        return visit(ctx.attrName());
-
+        if(paramNode.getNodeType() == Node.ELEMENT_NODE && paramNode.getAttributes().getLength() > 0) {
+        	String targetAttrName = ctx.attrName().ID().getText();
+			res.add(paramNode.getAttributes().getNamedItem(targetAttrName));
+		}
+        return res;
     }
-*/
+
     @Override
     public List<Node> visitBracketRP(XPathParser.BracketRPContext ctx) {
         return visit(ctx.rp());
