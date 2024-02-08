@@ -14,13 +14,12 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
- * @author rx_w@outlook.com
+ * @author chenpeng + zhaohanqing
  * @version 1.0
- * @date 1/29/22 3:39 PM
+ * @date 1/29/24 3:39 PM
  * @description
  */
 public class Engine extends XPathBaseVisitor<List<Node>> {
-
     private Node paramNode = null;
 
     // Attention: param nodes are set in a value-based way. Any callee can modify or return it exclusively.
@@ -30,9 +29,7 @@ public class Engine extends XPathBaseVisitor<List<Node>> {
 
     // helper function to get all strict descendents of a node
     public LinkedList<Node> getDescendents(Node node) {
-
         LinkedList<Node> res = new LinkedList<>(); // result
-
         NodeList childrenNodes = node.getChildNodes();
         for (int i = 0; i < childrenNodes.getLength(); i++) {
             Node curtChild = childrenNodes.item(i);
@@ -44,17 +41,14 @@ public class Engine extends XPathBaseVisitor<List<Node>> {
 
 	// equiv to .//rp
     public List<Node> visitDoubleSlash(XPathParser.RpContext ctx) {
-
         LinkedList<Node> des = new LinkedList<>();
 		LinkedList<Node> res = new LinkedList<>();
 		des.add(paramNode);
         des.addAll(getDescendents(paramNode));
-
         for (Node node : des) {
 			setPNode(node);
 			res.addAll(visit(ctx));
         }
-
         return res;  
     }
 
@@ -67,14 +61,12 @@ public class Engine extends XPathBaseVisitor<List<Node>> {
         }
     }
 
-
     @Override
     public List<Node> visitSingleAP(XPathParser.SingleAPContext ctx) {
         Node resDoc = visit(ctx.doc()).get(0);
         setPNode(resDoc);
 		List<Node> res = visit(ctx.rp());
         return res;
-
     }
 
     @Override
@@ -86,7 +78,6 @@ public class Engine extends XPathBaseVisitor<List<Node>> {
 
     @Override
     public List<Node> visitTagRP(XPathParser.TagRPContext ctx) {
-
         LinkedList<Node> res = new LinkedList<>();
         String targetTagName = ctx.tagName().ID().getText();
         NodeList children = paramNode.getChildNodes();
@@ -97,22 +88,18 @@ public class Engine extends XPathBaseVisitor<List<Node>> {
                 res.add(child);
             }
         }
-
         return res;
     }
 
     @Override
     public List<Node> visitChildrenRP(XPathParser.ChildrenRPContext ctx) {
-
         LinkedList<Node> res = new LinkedList<>();
-
         NodeList children = paramNode.getChildNodes();
         for (int i = 0; i < children.getLength(); i++) {
             Node child = children.item(i);
             res.add(child);
         }
         return res;
-
     }
 
     @Override
@@ -124,21 +111,16 @@ public class Engine extends XPathBaseVisitor<List<Node>> {
 
     @Override
     public List<Node> visitParentRP(XPathParser.ParentRPContext ctx) {
-
         LinkedList<Node> res = new LinkedList<>();
-
         Node parentNode = paramNode.getParentNode();
-        if (parentNode != null && !res.contains(parentNode)) {
-            res.add(parentNode);
-        }
+		res.add(parentNode);
+		// may need to check validation of xpath when query parent for root node
     	return res;
     }
 
     @Override
     public List<Node> visitTextRP(XPathParser.TextRPContext ctx) {
-
         LinkedList<Node> res = new LinkedList<>();
-
         NodeList children = paramNode.getChildNodes();
         for (int i = 0; i < children.getLength(); i++) {
             Node child = children.item(i);
@@ -152,20 +134,15 @@ public class Engine extends XPathBaseVisitor<List<Node>> {
     // not sure about this one
     @Override
     public List<Node> visitAttrRP(XPathParser.AttrRPContext ctx) {
-
         LinkedList<Node> res = new LinkedList<>();
-
         for (Node node : paramNode) {
-
             if(node.getNodeType() != Node.ELEMENT_NODE)
                 continue;
-
             NamedNodeMap attributes = node.getAttributes(); // get all attributes of a node
             for (int i = 0; i < attributes.getLength(); i++) {
                 res.add(attributes.item(i));
             }
         }
-
         setPNode(res);
         return visit(ctx.attrName());
 
@@ -173,27 +150,22 @@ public class Engine extends XPathBaseVisitor<List<Node>> {
 */
     @Override
     public List<Node> visitBracketRP(XPathParser.BracketRPContext ctx) {
-
         return visit(ctx.rp());
-
     }
 
     @Override
     public List<Node> visitSingleSlashRP(XPathParser.SingleSlashRPContext ctx) {
-        LinkedHashSet<Node> lhs = new LinkedHashSet<>();
         List<Node> res1 = visit(ctx.rp(0));
+        LinkedHashSet<Node> res2 = new LinkedHashSet<>();
 		for (Node node : res1) {
         	setPNode(node);
-        	List<Node> res2 = visit(ctx.rp(1));
-			lhs.addAll(res2);
+			res2.addAll(visit(ctx.rp(1)));
 		}
-        return new LinkedList<>(lhs);
-
+        return new LinkedList<>(res2);
     }
 
     @Override
     public List<Node> visitDoubleSlashRP(XPathParser.DoubleSlashRPContext ctx) {
-
         List<Node> res1 = visit(ctx.rp(0));
 		LinkedList<Node> res2 = new LinkedList<>();
 		for (Node node : res1) {
@@ -201,16 +173,13 @@ public class Engine extends XPathBaseVisitor<List<Node>> {
         	res2.addAll(visitDoubleSlash(ctx.rp(1)));
 		}
         return new LinkedList<>(res2);
-
     }
 
     @Override
     public List<Node> visitFilterRP(XPathParser.FilterRPContext ctx) {
-
         List<Node> res = visit(ctx.rp());
 		FilterEngine filterVisitor = new FilterEngine();
-        return res.stream()
-                .filter(node -> {
+        return res.stream().filter(node -> {
 					filterVisitor.setPNode(node);
 					return filterVisitor.visit(ctx.f());
 				}).collect(Collectors.toCollection(LinkedList::new));
@@ -218,15 +187,12 @@ public class Engine extends XPathBaseVisitor<List<Node>> {
 
     @Override
     public List<Node> visitCommaRP(XPathParser.CommaRPContext ctx) {
-
         Node currentCtxPNode = paramNode;
         setPNode(currentCtxPNode);
         List<Node> res1 = visit(ctx.rp(0));
         setPNode(currentCtxPNode);                 // reset paramNode to original state
         List<Node> res2 = visit(ctx.rp(1));
-
         res1.addAll(res2);
         return res1;
-
    }
 }

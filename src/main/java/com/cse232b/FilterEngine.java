@@ -14,9 +14,9 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
- * @author rx_w@outlook.com
+ * @author chenpeng + zhaohanqing
  * @version 1.0
- * @date 1/29/22 3:39 PM
+ * @date 1/29/24 3:39 PM
  * @description
  */
 public class FilterEngine extends XPathBaseVisitor<Boolean> {
