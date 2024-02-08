@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 public class FilterEngine extends XPathBaseVisitor<Boolean> {
 
     private Node paramNode = null;
-	private Engine engine = new Engine();
+	private RpEngine engine = new RpEngine();
 
     // Attention: param nodes are set in a value-based way. Any callee can modify or return it exclusively.
     public void setPNode(Node origin){
