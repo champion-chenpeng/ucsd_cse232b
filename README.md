@@ -22,6 +22,11 @@ The main interface, give argvs, get output xml file.
 
 ### Engine(Visitor)
 The engine, put parser tree(AST) into visit method of the engine, get the output DOM nodes.
+The Engine itself only implement ap and doc visitor, then using RpEngine to visit rp.
+
+### RpEngine(Visitor)
+The subengine, put in rp, get output DOM nodes. 
+The RpEngine itself only implement rp visitor, then using FilterEngine to visit f.
 
 ### [NEW!] FilterEngine(Visitor)
 The subengine, put in filterContext, get the Boolean indicates whether the filter hold at paramNode.
