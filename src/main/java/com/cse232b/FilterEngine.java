@@ -2,16 +2,9 @@ package com.cse232b;
 
 import com.cse232b.antlr4.XPathBaseVisitor;
 import com.cse232b.antlr4.XPathParser;
-import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 /**
  * @author chenpeng + zhaohanqing
@@ -22,7 +15,7 @@ import java.util.stream.Collectors;
 public class FilterEngine extends XPathBaseVisitor<Boolean> {
 
     private Node paramNode = null;
-	private RpEngine engine = new RpEngine();
+	private final RpEngine engine = new RpEngine();
 
     // Attention: param nodes are set in a value-based way. Any callee can modify or return it exclusively.
     public void setPNode(Node origin){
@@ -33,7 +26,7 @@ public class FilterEngine extends XPathBaseVisitor<Boolean> {
     public Boolean visitRpFilter(XPathParser.RpFilterContext ctx) {
 		engine.setPNode(paramNode);
         List<Node> res = engine.visit(ctx.rp());
-        return res.size() > 0;
+        return !res.isEmpty();
     }
 
     @Override

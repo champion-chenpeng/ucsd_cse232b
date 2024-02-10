@@ -2,15 +2,12 @@ package com.cse232b;
 
 import com.cse232b.antlr4.XPathBaseVisitor;
 import com.cse232b.antlr4.XPathParser;
-import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**

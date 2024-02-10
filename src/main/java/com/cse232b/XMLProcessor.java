@@ -32,8 +32,7 @@ public class XMLProcessor {
             throws ParserConfigurationException, IOException, SAXException {
         try (InputStream dataFileStream = XMLProcessor.class.getClassLoader().getResourceAsStream(xmlFileNameInXPath);
              InputStream dtdFileStream = XMLProcessor.class.getClassLoader().getResourceAsStream(DEFAULT_DTD_FILE_NAME)) {
-            List<Node> res = loadXMLDataFileToDomNodes(dataFileStream, dtdFileStream);
-            return res;
+            return loadXMLDataFileToDomNodes(dataFileStream, dtdFileStream);
         }
     }
 
@@ -71,24 +70,18 @@ public class XMLProcessor {
             throw new IllegalArgumentException("Input list rawResult cannot be empty.");
         }
 
-        if (rawResult.size() == 1) {
-            Node onlyNode = rawResult.get(0);
-            Node newNode = outputDoc.importNode(onlyNode, true);
-            outputDoc.appendChild(newNode);
-        } else {
-            Element resultEle = outputDoc.createElement("RESULT");
-            outputDoc.appendChild(resultEle);
+        Element resultEle = outputDoc.createElement("RESULT");
+        outputDoc.appendChild(resultEle);
 
-            for (Node old : rawResult) {
-                try {
-                    Node newNode = outputDoc.importNode(old, true);
-                    resultEle.appendChild(newNode);
-                } catch (DOMException e) {
-                    if (e.code != DOMException.NOT_SUPPORTED_ERR) {
-                        throw e;
-                    }
-                    // Handle the case when the node cannot be imported (optional).
+        for (Node old : rawResult) {
+            try {
+                Node newNode = outputDoc.importNode(old, true);
+                resultEle.appendChild(newNode);
+            } catch (DOMException e) {
+                if (e.code != DOMException.NOT_SUPPORTED_ERR) {
+                    throw e;
                 }
+                // Handle the case when the node cannot be imported (optional).
             }
         }
 
@@ -98,7 +91,7 @@ public class XMLProcessor {
     public static void writeXMLDoc(Document outputDoc, OutputStream oStream) throws TransformerException {
         Transformer transformer = transformerFactory.newTransformer();
         transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-        transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
+        transformer.setOutputProperty("{https://xml.apache.org/xslt}indent-amount", "2");
         transformer.transform(new DOMSource(outputDoc),new StreamResult(oStream));
     }
 
