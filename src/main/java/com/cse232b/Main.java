@@ -13,6 +13,8 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 
 public class Main
@@ -25,7 +27,7 @@ public class Main
             System.out.println("usage java -jar CSE-232B-M1.jar one_xpath_query.txt result.xml");
         }
 		List<Node> rawEvaluateRes = xPathEvaluate(args[0]);
-        if( rawEvaluateRes == null || rawEvaluateRes.size() == 0){
+        if( rawEvaluateRes == null || rawEvaluateRes.isEmpty()){
             System.err.println("XPath evaluation failed. No result file generated.");
             return;
         }
@@ -36,7 +38,7 @@ public class Main
     private static List<Node> xPathEvaluate(String xPathFilePath) {
         List<Node> rawEvaluateRes = null;
         try(
-            InputStream xPathIStream = new FileInputStream(xPathFilePath)
+            InputStream xPathIStream = Files.newInputStream(Paths.get(xPathFilePath))
         ) {
             rawEvaluateRes = evaluateXPath(xPathIStream);
         } catch (IOException e) {
@@ -54,14 +56,13 @@ public class Main
         XPathParser parser = new XPathParser(tks);
         parser.removeErrorListeners();
         Engine visitor = new Engine();
-        List<Node> res = visitor.visit(parser.ap());
-        return res;
+        return visitor.visit(parser.ap());
     }
 
 
     private static void writeResultToFile(List<Node> rawRes, String fileName) {
         try(
-            OutputStream resultXMLOStream = new FileOutputStream(fileName)
+            OutputStream resultXMLOStream = Files.newOutputStream(Paths.get(fileName))
         ) {
             XMLProcessor.serialize(rawRes, resultXMLOStream);
         }  catch (IOException e) {
