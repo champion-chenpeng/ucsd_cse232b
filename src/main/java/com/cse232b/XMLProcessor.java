@@ -28,16 +28,6 @@ public class XMLProcessor {
     static TransformerFactory transformerFactory = TransformerFactory.newInstance();
 
 
-//    public static List<Node> parse(String xmlFileNameInXPath)
-//             throws ParserConfigurationException, IOException, SAXException {
-//        InputStream dataFileStream = XMLProcessor.class.getClassLoader().getResourceAsStream(xmlFileNameInXPath);
-//        InputStream dtdFileStream = XMLProcessor.class.getClassLoader().getResourceAsStream(DEFAULT_DTD_FILE_NAME);
-//        List<Node> res = loadXMLDataFileToDomNodes(dataFileStream,dtdFileStream);
-//        dataFileStream.close();
-//        dtdFileStream.close();
-//        return res;
-//    }
-
     public static List<Node> parse(String xmlFileNameInXPath)
             throws ParserConfigurationException, IOException, SAXException {
         try (InputStream dataFileStream = XMLProcessor.class.getClassLoader().getResourceAsStream(xmlFileNameInXPath);
@@ -47,21 +37,9 @@ public class XMLProcessor {
         }
     }
 
-//    public static void serialize(List<Node> rawResult, OutputStream oStream, boolean addResEle)
-//            throws ParserConfigurationException, TransformerException {
-//        Document doc = addResEle ? generateResultXMLAddingResultEle(rawResult) : generateResultXMLRaw(rawResult);
-//            writeXMLDoc(doc,oStream);
-//    }
-
-    public static void serialize(List<Node> rawResult, OutputStream oStream, boolean addResEle)
+    public static void serialize(List<Node> rawResult, OutputStream oStream)
             throws ParserConfigurationException, TransformerException {
-        Document doc;
-        if (!addResEle) {
-            if (rawResult.isEmpty() || rawResult.size() > 1) {
-                throw new IllegalArgumentException("Input list rawResult must contain exactly one node when addResEle is false.");
-            }
-        }
-        doc = generateResultXML(rawResult);
+        Document doc = generateResultXML(rawResult);
         writeXMLDoc(doc, oStream);
     }
 
@@ -84,40 +62,6 @@ public class XMLProcessor {
         return res;
     }
 
-//    public static Document generateResultXMLRaw(List<Node> rawResult) throws ParserConfigurationException {
-//        DocumentBuilder bd = docBldFactory.newDocumentBuilder();
-//        Document outputDoc = bd.newDocument();
-//        if (rawResult.size() != 1) {
-//            throw new RuntimeException("size of raw result of xquery eva is not 1, cannot create doc directly");
-//        }
-//        Node onlyNode = rawResult.get(0);
-//        Node newNode = outputDoc.importNode(onlyNode, true);
-//        outputDoc.appendChild(newNode);
-//        return outputDoc;
-//    }
-//    public static Document generateResultXMLAddingResultEle(List<Node> rawResult) throws ParserConfigurationException {
-//        DocumentBuilder bd = docBldFactory.newDocumentBuilder();
-//        Document outputDoc = bd.newDocument();
-//        Element resultEle = outputDoc.createElement("RESULT");
-//        outputDoc.appendChild(resultEle);
-//        for(Node old: rawResult){
-//            try {
-//                Node newNode;
-//                newNode = outputDoc.importNode(old, true);
-//                resultEle.appendChild(newNode);
-//            } catch (DOMException e) {
-//                if (e.code != DOMException.NOT_SUPPORTED_ERR) {
-//                    throw e;
-//                }
-////                Element specialEle = outputDoc.createElement("notImportableNode");
-////                Text nodeNameText = outputDoc.createTextNode("NodeName:" + old.getNodeName());
-////                specialEle.appendChild(nodeNameText);
-////                resultEle.appendChild(specialEle);
-//            }
-//
-//        }
-//        return outputDoc;
-//    }
 
     public static Document generateResultXML(List<Node> rawResult) throws ParserConfigurationException {
         DocumentBuilder bd = docBldFactory.newDocumentBuilder();
@@ -150,7 +94,6 @@ public class XMLProcessor {
 
         return outputDoc;
     }
-
 
     public static void writeXMLDoc(Document outputDoc, OutputStream oStream) throws TransformerException {
         Transformer transformer = transformerFactory.newTransformer();

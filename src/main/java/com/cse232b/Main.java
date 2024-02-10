@@ -30,7 +30,7 @@ public class Main
             return;
         }
         System.out.println("XPath evaluation finished, writing result file...");
-        writeResultToFile(rawEvaluateRes, args[1], true);
+        writeResultToFile(rawEvaluateRes, args[1]);
     }
 
     private static List<Node> xPathEvaluate(String xPathFilePath) {
@@ -59,11 +59,11 @@ public class Main
     }
 
 
-    private static void writeResultToFile(List<Node> rawRes, String fileName, boolean addResEle) {
+    private static void writeResultToFile(List<Node> rawRes, String fileName) {
         try(
             OutputStream resultXMLOStream = new FileOutputStream(fileName)
         ) {
-            XMLProcessor.serialize(rawRes, resultXMLOStream, addResEle);
+            XMLProcessor.serialize(rawRes, resultXMLOStream);
         }  catch (IOException e) {
             System.err.println("open result file failed: " + e.getMessage());
         } catch (ParserConfigurationException | TransformerException e){
