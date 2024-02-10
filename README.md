@@ -10,6 +10,7 @@ A xquery processor for ucsd cse 232b courser project
 	- current tests:
 		- 5 query string from instructor
 		- run and compare the content with some standard ones(with some standard versions, maybe 1.0)
+		- additional test (6th) test the attrName visitor, only test in stringConstant filter
 
 ## Project Design
 ![Project Design](Docs/Project_Design.png)
