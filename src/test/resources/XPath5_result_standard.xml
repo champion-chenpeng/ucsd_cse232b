@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<RESULT>
+  <SCENE>
+    
+    <SPEECH>
+      
+      <SPEAKER age="20" name="David"/>
+      
+      <TALK>Good evening, everyone!</TALK>
+      
+    </SPEECH>
+    
+    <SPEECH>
+      
+      <SPEAKER age="10" name="Mary"/>
+      
+      <TALK>Good evening, David!</TALK>
+      
+    </SPEECH>
+    
+  </SCENE>
+</RESULT>
