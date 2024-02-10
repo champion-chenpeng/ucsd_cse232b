@@ -28,9 +28,9 @@ rp  : tagName       #tagRP
 
 //filter
 f   : rp        #rpFilter
-    | rp EQ rp  #eqFilter
+    | rp eq rp  #eqFilter
     | rp IS rp  #isFilter
-	| rp '=' stringConstant #stringFilter
+	| rp '=' '"' stringConstant '"' #stringFilter
     | '(' f ')' #bracketFilter
     | f 'and' f #andFilter
     | f 'or' f  #orFilter
@@ -39,9 +39,9 @@ f   : rp        #rpFilter
 
 tagName : ID;
 attrName : ID;
-stringConstant : ('"' | '\'') ID ('"' | '\'');
+stringConstant: ID;
 
-EQ  : '=' | 'eq';
+eq: '=' | 'eq';
 IS  : '==' | 'is';
 ID  : [a-zA-Z0-9_-]+ ;
 
