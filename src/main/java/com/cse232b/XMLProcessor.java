@@ -27,21 +27,22 @@ public class XMLProcessor {
     static DocumentBuilderFactory docBldFactory = DocumentBuilderFactory.newInstance();
     static TransformerFactory transformerFactory = TransformerFactory.newInstance();
 
-    public static List<Node> parse(String xmlFileNameInXPath) 
-             throws ParserConfigurationException, IOException, SAXException {
-        InputStream dataFileStream = XMLProcessor.class.getClassLoader().getResourceAsStream(xmlFileNameInXPath);
-        InputStream dtdFileStream = XMLProcessor.class.getClassLoader().getResourceAsStream(DEFAULT_DTD_FILE_NAME);
-        List<Node> res = loadXMLDataFileToDomNodes(dataFileStream,dtdFileStream);
-        dataFileStream.close();
-        dtdFileStream.close();
-        return res;
+
+    public static List<Node> parse(String xmlFileNameInXPath)
+            throws ParserConfigurationException, IOException, SAXException {
+        try (InputStream dataFileStream = XMLProcessor.class.getClassLoader().getResourceAsStream(xmlFileNameInXPath);
+             InputStream dtdFileStream = XMLProcessor.class.getClassLoader().getResourceAsStream(DEFAULT_DTD_FILE_NAME)) {
+            List<Node> res = loadXMLDataFileToDomNodes(dataFileStream, dtdFileStream);
+            return res;
+        }
     }
 
-    public static void serialize(List<Node> rawResult, OutputStream oStream, boolean addResEle)
+    public static void serialize(List<Node> rawResult, OutputStream oStream)
             throws ParserConfigurationException, TransformerException {
-        Document doc = addResEle ? generateResultXMLAddingResultEle(rawResult) : generateResultXMLRaw(rawResult);
-            writeXMLDoc(doc,oStream);
+        Document doc = generateResultXML(rawResult);
+        writeXMLDoc(doc, oStream);
     }
+
 
     private static List<Node> loadXMLDataFileToDomNodes(InputStream xmlDataFileStream,InputStream dtdStream)
             throws ParserConfigurationException, IOException, SAXException {
@@ -61,44 +62,44 @@ public class XMLProcessor {
         return res;
     }
 
-    public static Document generateResultXMLRaw(List<Node> rawResult) throws ParserConfigurationException {
-        DocumentBuilder bd = docBldFactory.newDocumentBuilder();
-        Document outputDoc = bd.newDocument();
-        if (rawResult.size() != 1) {
-            throw new RuntimeException("size of raw result of xquery eva is not 1, cannot create doc directly");
-        }
-        Node onlyNode = rawResult.get(0);
-        Node newNode = outputDoc.importNode(onlyNode, true);
-        outputDoc.appendChild(newNode);
-        return outputDoc;
-    }
-    public static Document generateResultXMLAddingResultEle(List<Node> rawResult) throws ParserConfigurationException {
-        DocumentBuilder bd = docBldFactory.newDocumentBuilder();
-        Document outputDoc = bd.newDocument();
-        Element resultEle = outputDoc.createElement("RESULT");
-        outputDoc.appendChild(resultEle);
-        for(Node old: rawResult){
-            try {
-                Node newNode;
-                newNode = outputDoc.importNode(old, true);
-                resultEle.appendChild(newNode);
-            } catch (DOMException e) {
-                if (e.code != DOMException.NOT_SUPPORTED_ERR) {
-                    throw e;
-                }
-//                Element specialEle = outputDoc.createElement("notImportableNode");
-//                Text nodeNameText = outputDoc.createTextNode("NodeName:" + old.getNodeName());
-//                specialEle.appendChild(nodeNameText);
-//                resultEle.appendChild(specialEle);
-            }
 
+    public static Document generateResultXML(List<Node> rawResult) throws ParserConfigurationException {
+        DocumentBuilder bd = docBldFactory.newDocumentBuilder();
+        Document outputDoc = bd.newDocument();
+
+        if (rawResult.isEmpty()) {
+            throw new IllegalArgumentException("Input list rawResult cannot be empty.");
         }
+
+        if (rawResult.size() == 1) {
+            Node onlyNode = rawResult.get(0);
+            Node newNode = outputDoc.importNode(onlyNode, true);
+            outputDoc.appendChild(newNode);
+        } else {
+            Element resultEle = outputDoc.createElement("RESULT");
+            outputDoc.appendChild(resultEle);
+
+            for (Node old : rawResult) {
+                try {
+                    Node newNode = outputDoc.importNode(old, true);
+                    resultEle.appendChild(newNode);
+                } catch (DOMException e) {
+                    if (e.code != DOMException.NOT_SUPPORTED_ERR) {
+                        throw e;
+                    }
+                    // Handle the case when the node cannot be imported (optional).
+                }
+            }
+        }
+
         return outputDoc;
     }
+
     public static void writeXMLDoc(Document outputDoc, OutputStream oStream) throws TransformerException {
         Transformer transformer = transformerFactory.newTransformer();
         transformer.setOutputProperty(OutputKeys.INDENT, "yes");
         transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
-        transformer.transform(new DOMSource(outputDoc),new StreamResult(oStream));}
+        transformer.transform(new DOMSource(outputDoc),new StreamResult(oStream));
+    }
 
 }
