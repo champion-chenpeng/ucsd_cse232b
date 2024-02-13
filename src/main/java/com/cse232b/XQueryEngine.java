@@ -1,5 +1,10 @@
 package com.cse232b;
 
+import com.cse232b.antlr4.XPathParser.ApContext;
+import com.cse232b.antlr4.XPathParser.RpContext;
+
+import com.cse232b.antlr4.XQueryParser.XqContext;
+import com.cse232b.antlr4.XPathParser.RpContext;
 import com.cse232b.antlr4.XQueryBaseVisitor;
 import com.cse232b.antlr4.XQueryParser;
 import org.w3c.dom.Document;
@@ -20,8 +25,9 @@ import java.util.LinkedHashSet;
  * @date 2/20/22 12:28 PM
  * @description
  */
-public class Engine extends XQueryBaseVisitor<List<Node>>{
+public class XQueryEngine extends XQueryBaseVisitor<List<Node>>{
     private final Document tmpDoc;
+	private final XPathEngine xpathEngine = new XPathEngine();
     private Map<String, List<Node>> contextMap = new HashMap<>();
     private List<Map<String, List<Node>>> forClausePerStates = new ArrayList<>();
     void setContextMap(Map<String,List<Node>> c) {
@@ -78,7 +84,7 @@ public class Engine extends XQueryBaseVisitor<List<Node>>{
         return r;
     }
 
-    public Engine(Document tmpDoc) {
+    public XQueryEngine(Document tmpDoc) {
         this.tmpDoc = tmpDoc;
     }
 
@@ -121,8 +127,14 @@ public class Engine extends XQueryBaseVisitor<List<Node>>{
         String rpText = ctx.rp().getText();
         InputStream i = new ByteArrayInputStream(rpText.getBytes());
 
-        return evaluateXPathRPByPNodesWithRtException(i, visit(ctx.xq()));
-
+		List<Node> res1 = visit(ctx.xq());
+		LinkedList<Node> res2 = new LinkedList<>(); 
+		RpContext rp = XMLProcessor.parseXPathRp(i);
+		for (Node node : res1) {
+			xpathEngine.rpEngine.setPNode(node);
+			res2.addAll(xpathEngine.rpEngine.visit(rp));
+		}
+		return res2;
     }
 
     @Override
@@ -142,9 +154,10 @@ public class Engine extends XQueryBaseVisitor<List<Node>>{
     @Override
     public List<Node> visitApXQ(XQueryParser.ApXQContext ctx) {
         setContextMap(contextMap);
-        String ap = ctx.getText();
-        InputStream is = new ByteArrayInputStream(ap.getBytes());
-        return XPathEvaluator.evaluateXPathAPWithRtException(is);
+        String apText = ctx.getText();
+        InputStream is = new ByteArrayInputStream(apText.getBytes());
+		ApContext ap = XMLProcessor.parseXPathAp(is);
+        return xpathEngine.visit(ap);
     }
 
     @Override
@@ -203,8 +216,13 @@ public class Engine extends XQueryBaseVisitor<List<Node>>{
         InputStream i = new ByteArrayInputStream(rpText.getBytes());
 
         List<Node> xqRes = getSelfAndDescendents(visit(ctx.xq()));  // get the proper context nodes for rp parsing
-        return evaluateXPathRPByPNodesWithRtException(i, xqRes);
-
+		LinkedList<Node> res2 = new LinkedList<>(); 
+		RpContext rp = XMLProcessor.parseXPathRp(i);
+		for (Node node : xqRes) {
+			xpathEngine.rpEngine.setPNode(node);
+			res2.addAll(xpathEngine.rpEngine.visit(rp));
+		}
+		return res2;
     }
 
     public void dfsForVarState(XQueryParser.ForClauseContext ctx,

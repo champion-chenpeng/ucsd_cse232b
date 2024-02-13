@@ -1,11 +1,5 @@
 package com.cse232b;
 
-import com.cse232b.antlr4.XQueryLexer;
-import com.cse232b.antlr4.XQueryParser;
-
-import org.antlr.v4.runtime.CharStream;
-import org.antlr.v4.runtime.CharStreams;
-import org.antlr.v4.runtime.CommonTokenStream;
 
 import org.w3c.dom.Node;
 
@@ -52,15 +46,10 @@ public class Main
     }
 
     private static List<Node> evaluateXQuery(InputStream xQueryStream) throws Exception {
-        CharStream cs = CharStreams.fromStream(xQueryStream);
-        XQueryLexer lexer = new XQueryLexer(cs);
-        CommonTokenStream tks = new CommonTokenStream(lexer);
-        XQueryParser parser = new XQueryParser(tks);
-        parser.removeErrorListeners();
         DocumentBuilderFactory docBldFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder bd = docBldFactory.newDocumentBuilder();
-        Engine visitor = new Engine(bd.newDocument());
-        return visitor.visit(parser.xq());
+        XQueryEngine visitor = new XQueryEngine(bd.newDocument());
+        return visitor.visit(XMLProcessor.parseXQuery(xQueryStream));
     }
 
 
