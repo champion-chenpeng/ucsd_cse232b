@@ -1,6 +1,7 @@
 package com.cse232b;
 
 
+import com.cse232b.xquery.XQueryEngine;
 import org.w3c.dom.Node;
 
 import javax.xml.parsers.DocumentBuilder;

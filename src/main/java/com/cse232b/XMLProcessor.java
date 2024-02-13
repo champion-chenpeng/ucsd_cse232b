@@ -1,27 +1,29 @@
 package com.cse232b;
 
-import com.cse232b.antlr4.XQueryLexer;
-import com.cse232b.antlr4.XQueryParser;
-import com.cse232b.antlr4.XQueryParser.XqContext;
 import com.cse232b.antlr4.XPathLexer;
 import com.cse232b.antlr4.XPathParser;
 import com.cse232b.antlr4.XPathParser.ApContext;
 import com.cse232b.antlr4.XPathParser.RpContext;
-
+import com.cse232b.antlr4.XQueryLexer;
+import com.cse232b.antlr4.XQueryParser;
+import com.cse232b.antlr4.XQueryParser.XqContext;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.ParserRuleContext;
-
-
-import org.w3c.dom.*;
+import org.w3c.dom.DOMException;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.*;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.IOException;
@@ -108,45 +110,40 @@ public class XMLProcessor {
         transformer.transform(new DOMSource(outputDoc),new StreamResult(oStream));
     }
 
-    public static ApContext parseXPathAp(InputStream xPathStream) {
-		XPathParser parser = null;
-		try {
-        CharStream cs = CharStreams.fromStream(xPathStream);
-        XPathLexer lexer = new XPathLexer(cs);
-        CommonTokenStream tks = new CommonTokenStream(lexer);
-        parser = new XPathParser(tks);
-        parser.removeErrorListeners();
-		} catch (Exception e) {
+    private static XPathParser parseXPath(InputStream xPathStream) {
+        XPathParser parser = null;
+        try {
+            CharStream cs = CharStreams.fromStream(xPathStream);
+            XPathLexer lexer = new XPathLexer(cs);
+            CommonTokenStream tks = new CommonTokenStream(lexer);
+            parser = new XPathParser(tks);
+            parser.removeErrorListeners();
+        } catch (Exception e) {
             System.err.println("XPath parse terminated with error: " + e.getMessage());
-		}
-		return parser.ap();
+        }
+        return parser;
     }
-
+    public static ApContext parseXPathAp(InputStream xPathStream) {
+        XPathParser parser = parseXPath(xPathStream);
+        return parser.ap();
+    }
     public static RpContext parseXPathRp(InputStream xPathStream) {
-		XPathParser parser = null;
-		try {
-        CharStream cs = CharStreams.fromStream(xPathStream);
-        XPathLexer lexer = new XPathLexer(cs);
-        CommonTokenStream tks = new CommonTokenStream(lexer);
-        parser = new XPathParser(tks);
-        parser.removeErrorListeners();
-		} catch (Exception e) {
-            System.err.println("XPath parse terminated with error: " + e.getMessage());
-		}
-		return parser.rp();
+        XPathParser parser = parseXPath(xPathStream);
+        return parser.rp();
     }
 
     public static XqContext parseXQuery(InputStream xQueryStream) {
 		XQueryParser parser = null;
 		try {
-        CharStream cs = CharStreams.fromStream(xQueryStream);
-        XQueryLexer lexer = new XQueryLexer(cs);
-        CommonTokenStream tks = new CommonTokenStream(lexer);
-        parser = new XQueryParser(tks);
-        parser.removeErrorListeners();
+            CharStream cs = CharStreams.fromStream(xQueryStream);
+            XQueryLexer lexer = new XQueryLexer(cs);
+            CommonTokenStream tks = new CommonTokenStream(lexer);
+            parser = new XQueryParser(tks);
+            parser.removeErrorListeners();
 		} catch (Exception e) {
             System.err.println("XQuery parse terminated with error: " + e.getMessage());
 		}
-		return parser.xq();
+        assert parser != null;
+        return parser.xq();
     }
 }
