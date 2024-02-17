@@ -5,7 +5,6 @@ import com.cse232b.antlr4.XPathParser;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -122,12 +121,12 @@ public class RpEngine extends XPathBaseVisitor<List<Node>> {
     @Override
     public List<Node> visitSingleSlashRP(XPathParser.SingleSlashRPContext ctx) {
         List<Node> res1 = visit(ctx.rp(0));
-        LinkedHashSet<Node> res2 = new LinkedHashSet<>();
+        LinkedList<Node> res2 = new LinkedList<>();
 		for (Node node : res1) {
         	setPNode(node);
 			res2.addAll(visit(ctx.rp(1)));
 		}
-        return new LinkedList<>(res2);
+        return res2;
     }
 
     @Override

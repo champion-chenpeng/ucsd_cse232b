@@ -5,6 +5,8 @@ import com.cse232b.antlr4.XPathParser;
 import org.w3c.dom.Node;
 
 import java.util.List;
+import java.util.LinkedList;
+import java.util.LinkedHashSet;
 
 /**
  * @author chenpeng + zhaohanqing
@@ -28,13 +30,17 @@ public class Engine extends XPathBaseVisitor<List<Node>> {
     public List<Node> visitSingleAP(XPathParser.SingleAPContext ctx) {
         Node resDoc = visit(ctx.doc()).get(0);
         rpVisitor.setPNode(resDoc);
-		return rpVisitor.visit(ctx.rp());
+		// remove repeat
+        LinkedHashSet<Node> res = new LinkedHashSet<>(rpVisitor.visit(ctx.rp()));
+		return new LinkedList<Node>(res);
     }
 
     @Override
     public List<Node> visitDoubleAP(XPathParser.DoubleAPContext ctx) {
         Node resDoc = visit(ctx.doc()).get(0); 
         rpVisitor.setPNode(resDoc);
-        return rpVisitor.visitDoubleSlash(ctx.rp());
+		// remove repeat
+        LinkedHashSet<Node> res = new LinkedHashSet<>(rpVisitor.visitDoubleSlash(ctx.rp()));
+		return new LinkedList<Node>(res);
     }
 }

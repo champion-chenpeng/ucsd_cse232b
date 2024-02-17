@@ -16,7 +16,7 @@ import java.util.List;
  */
 public class AppTest 
 {
-	private int Ncase = 6;
+	private int Ncase = 10;
     /**
 	 * Test whether the pipeline runs well
      */
