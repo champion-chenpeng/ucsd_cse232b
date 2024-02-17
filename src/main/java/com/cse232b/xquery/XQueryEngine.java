@@ -15,9 +15,6 @@ import java.util.*;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
-import java.util.List;
-import java.util.LinkedList;
-import java.util.LinkedHashSet;
 
 /**
  * @author rx_w@outlook.com
@@ -625,20 +622,12 @@ public class XQueryEngine extends XQueryBaseVisitor<List<Node>>{
     }
 
     @Override
-    public List<Node> visitSingleAP(XPathParser.SingleAPContext ctx) {
-        Node resDoc = visit(ctx.doc()).get(0);
-        rpVisitor.setPNode(resDoc);
-		// remove repeat
-        LinkedHashSet<Node> res = new LinkedHashSet<>(rpVisitor.visit(ctx.rp()));
-		return new LinkedList<Node>(res);
+    public List<Node> visitAttrName(XQueryParser.AttrNameContext ctx) {
+        return super.visitAttrName(ctx);
     }
 
     @Override
-    public List<Node> visitDoubleAP(XPathParser.DoubleAPContext ctx) {
-        Node resDoc = visit(ctx.doc()).get(0); 
-        rpVisitor.setPNode(resDoc);
-		// remove repeat
-        LinkedHashSet<Node> res = new LinkedHashSet<>(rpVisitor.visitDoubleSlash(ctx.rp()));
-		return new LinkedList<Node>(res);
+    public List<Node> visitFileName(XQueryParser.FileNameContext ctx) {
+        return super.visitFileName(ctx);
     }
 }
