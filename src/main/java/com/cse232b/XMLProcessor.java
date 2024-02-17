@@ -65,9 +65,8 @@ public class XMLProcessor {
     public static Document generateResultXML(List<Node> rawResult) throws ParserConfigurationException {
         DocumentBuilder bd = docBldFactory.newDocumentBuilder();
         Document outputDoc = bd.newDocument();
-
         if (rawResult.isEmpty()) {
-            throw new IllegalArgumentException("Input list rawResult cannot be empty.");
+			return outputDoc;
         }
 
         Element resultEle = outputDoc.createElement("RESULT");

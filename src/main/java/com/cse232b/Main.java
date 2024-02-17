@@ -27,7 +27,7 @@ public class Main
             System.out.println("usage java -jar CSE-232B-M1.jar one_xpath_query.txt result.xml");
         }
 		List<Node> rawEvaluateRes = xPathEvaluate(args[0]);
-        if( rawEvaluateRes == null || rawEvaluateRes.isEmpty()){
+        if( rawEvaluateRes == null){
             System.err.println("XPath evaluation failed. No result file generated.");
             return;
         }
