@@ -4,19 +4,18 @@ A xquery processor for ucsd cse 232b courser project
 ## Usage
 1. package and run mannually
 		mvn package
-		java -jar target/CSE-232B-M1.jar path/to/single\_query\_xpath.txt path/to/output.xml
+		java -jar target/CSE-232B-M2.jar path/to/single\_query.txt path/to/output.xml
 2. test
 		mvn test
 	- current tests:
-		- 5 query string from instructor
+		- 2 query string from instructor
 		- run and compare the content with some standard ones(with some standard versions, maybe 1.0)
-		- additional test (6th) test the attrName visitor, only test in stringConstant filter
 
 ## Project Design
 ![Project Design](Docs/Project_Design.png)
 
 ### Entry
-		java -jar M1.jar single_query_xpath.txt result.xml
+		java -jar M1.jar single_query.txt result.xml
 
 ### Main
 The main interface, give argvs, get output xml file.
@@ -36,20 +35,7 @@ The subengine, put in filterContext, get the Boolean indicates whether the filte
 XML-DOM parser and serializer.
 
 ## TBD
-1. Optimize the implementation the project. (To make sure originality), directions:
-	- OOD in Engine
-		- principles: <200 line per file, < 20 methods per class
-		- modify helpers 
-		- remove global variable paramNodes
-2. Refactor the project
-
-	- [x] optimize the project structure
-		- rename Engine->Main, QEngineVisitor->Engine
-		- remove XPathEvaluator and add evaluateXPath into Main
-	- modify the XMLProcessor
-		- [x] store all the data, instead of DEFAULT
-	- additional query
-	- Autometically check the answer? (manually is acceptible)
+1. Refactor the project:
 ## Misc
 ### Project Architecture
 ![Project Architecture](Docs/Project_Architecture.png)

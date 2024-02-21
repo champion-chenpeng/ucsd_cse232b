@@ -1,4 +1,6 @@
-package com.cse232b;
+package com.cse232b.xpath;
+
+import com.cse232b.XMLProcessor;
 
 import com.cse232b.antlr4.XPathBaseVisitor;
 import com.cse232b.antlr4.XPathParser;
@@ -14,8 +16,8 @@ import java.util.LinkedHashSet;
  * @date 1/29/24 3:39 PM
  * @description
  */
-public class Engine extends XPathBaseVisitor<List<Node>> {
-	private final RpEngine rpVisitor = new RpEngine();
+public class XPathEngine extends XPathBaseVisitor<List<Node>> {
+    public RpEngine rpEngine = new RpEngine();
 
     @Override
     public List<Node> visitDoc(XPathParser.DocContext ctx) {
@@ -29,18 +31,18 @@ public class Engine extends XPathBaseVisitor<List<Node>> {
     @Override
     public List<Node> visitSingleAP(XPathParser.SingleAPContext ctx) {
         Node resDoc = visit(ctx.doc()).get(0);
-        rpVisitor.setPNode(resDoc);
+        rpEngine.setPNode(resDoc);
 		// remove repeat
-        LinkedHashSet<Node> res = new LinkedHashSet<>(rpVisitor.visit(ctx.rp()));
+        LinkedHashSet<Node> res = new LinkedHashSet<>(rpEngine.visit(ctx.rp()));
 		return new LinkedList<Node>(res);
     }
 
     @Override
     public List<Node> visitDoubleAP(XPathParser.DoubleAPContext ctx) {
         Node resDoc = visit(ctx.doc()).get(0); 
-        rpVisitor.setPNode(resDoc);
+        rpEngine.setPNode(resDoc);
 		// remove repeat
-        LinkedHashSet<Node> res = new LinkedHashSet<>(rpVisitor.visitDoubleSlash(ctx.rp()));
+        LinkedHashSet<Node> res = new LinkedHashSet<>(rpEngine.visitDoubleSlash(ctx.rp()));
 		return new LinkedList<Node>(res);
     }
 }
