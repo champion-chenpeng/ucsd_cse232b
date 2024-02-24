@@ -81,23 +81,30 @@ public class XMLProcessor {
     public static Document generateResultXML(List<Node> rawResult) throws ParserConfigurationException {
         DocumentBuilder bd = docBldFactory.newDocumentBuilder();
         Document outputDoc = bd.newDocument();
-        if (rawResult.isEmpty()) {
-			return outputDoc;
-        }
+//        if (rawResult.isEmpty()) {
+//			return outputDoc;
+//        }
+//
+//        Element resultEle = outputDoc.createElement("RESULT");
+//        outputDoc.appendChild(resultEle);
+//
+//        for (Node old : rawResult) {
+//            try {
+//                Node newNode = outputDoc.importNode(old, true);
+//                resultEle.appendChild(newNode);
+//            } catch (DOMException e) {
+//                if (e.code != DOMException.NOT_SUPPORTED_ERR) {
+//                    throw e;
+//                }
+//                // Handle the case when the node cannot be imported (optional).
+//            }
+//        }
+        if (!rawResult.isEmpty()) {
+            // Import the first node from the rawResult list into the new Document
+            Node importedNode = outputDoc.importNode(rawResult.get(0), true);
 
-        Element resultEle = outputDoc.createElement("RESULT");
-        outputDoc.appendChild(resultEle);
-
-        for (Node old : rawResult) {
-            try {
-                Node newNode = outputDoc.importNode(old, true);
-                resultEle.appendChild(newNode);
-            } catch (DOMException e) {
-                if (e.code != DOMException.NOT_SUPPORTED_ERR) {
-                    throw e;
-                }
-                // Handle the case when the node cannot be imported (optional).
-            }
+            // Append the importedNode directly to the outputDoc, making it the root element
+            outputDoc.appendChild(importedNode);
         }
 
         return outputDoc;

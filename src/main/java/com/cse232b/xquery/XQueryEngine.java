@@ -17,9 +17,9 @@ import java.io.InputStream;
 
 
 /**
- * @author rx_w@outlook.com
+ * @author Peng Chen, Hanqing Zhao
  * @version 1.0
- * @date 2/20/22 12:28 PM
+ * @date 02/23/2024
  * @description
  */
 public class XQueryEngine extends XQueryBaseVisitor<List<Node>>{
