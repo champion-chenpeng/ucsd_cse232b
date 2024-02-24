@@ -25,11 +25,23 @@ import java.io.InputStream;
 public class XQueryEngine extends XQueryBaseVisitor<List<Node>>{
     private final Document tmpDoc;
 	private final XPathEngine xpathEngine = new XPathEngine();
+
     private Map<String, List<Node>> contextMap = new HashMap<>();
     private List<Map<String, List<Node>>> forClausePerStates = new ArrayList<>();
+	
+// constructor
+    public XQueryEngine(Document tmpDoc) {
+        this.tmpDoc = tmpDoc;
+    }
+
     void setContextMap(Map<String,List<Node>> c) {
         this.contextMap = new HashMap<>(c);
     }
+
+	Map<String, List<Node> > getContextMap() {
+		return this.contextMap;
+	}
+
     private final List<Node> DEFAULT_COND_TRUE_LIST = new ArrayList<>(0);
 
     // TODO:need another getDescendents method here to parse #doubleSlashXQ. Get proper pNodes then call XPathEvaluator.
@@ -79,10 +91,6 @@ public class XQueryEngine extends XQueryBaseVisitor<List<Node>>{
             }
         }
         return r;
-    }
-
-    public XQueryEngine(Document tmpDoc) {
-        this.tmpDoc = tmpDoc;
     }
 
     @Override
@@ -277,357 +285,14 @@ public class XQueryEngine extends XQueryBaseVisitor<List<Node>>{
     @Override
     public List<Node> visitWhereClause(XQueryParser.WhereClauseContext ctx) {
         // with given context, return the boolean result of cond
-        return visit(ctx.cond());
+		CondEngine condEngine = new CondEngine();
+		condEngine.xqueryEngine = this;
+        return condEngine.visit(ctx.cond()) ? DEFAULT_COND_TRUE_LIST : null;
     }
 
     @Override
     public List<Node> visitReturnClause(XQueryParser.ReturnClauseContext ctx) {
         // with given context, evaluate xq. should use the same context with where clause.
         return visit(ctx.xq());
-    }
-
-    @Override
-    public List<Node> visitBraceCond(XQueryParser.BraceCondContext ctx) {
-        return visit(ctx.cond());
-    }
-
-    @Override
-    public List<Node> visitOrCond(XQueryParser.OrCondContext ctx) {
-        Map<String,List<Node>> currentContext = this.contextMap;
-        setContextMap(currentContext);
-        boolean bL = visit(ctx.cond(0)) != null;
-        setContextMap(currentContext);
-        boolean bR = visit(ctx.cond(1)) != null;
-        return bL || bR ? DEFAULT_COND_TRUE_LIST : null;
-    }
-
-    
-    public List<Node> visitSomeVarXq(XQueryParser.SatisfyCondContext ctx, int curIndex, Map<String, List<Node>> curMap) {
-        List<Node> res;
-        List<Node> finalRes;
-
-        if (ctx.var().size() == curIndex) { // iteration reached the end
-            setContextMap(curMap);
-            return visit(ctx.cond());   // apply condition at the deepest context map
-        }
-
-        String var = ctx.var(curIndex).ID().getText() ;
-        XQueryParser.XqContext xq = ctx.xq(curIndex);
-
-        setContextMap(curMap);
-        res = visit(xq);  // the query result of the index_th xq (corresponding to the index_th var)
-
-        for (Node node : res) {
-            Map<String, List<Node>> nextMap = new HashMap<>(curMap);
-            LinkedList<Node> curNodeList = new LinkedList<>();
-            curNodeList.add(node);
-            nextMap.put(var, curNodeList);   // results in a deeper context map extended on the basis of the current context map
-
-            finalRes = visitSomeVarXq(ctx, curIndex + 1, nextMap);
-            if (finalRes != null) return finalRes;   // condition satisfied
-        }
-
-        return null;
-    }
-
-    @Override
-    public List<Node> visitSatisfyCond(XQueryParser.SatisfyCondContext ctx) {
-        return visitSomeVarXq(ctx, 0, contextMap);   // call in a recursive way
-    }
-
-
-
-    @Override
-    public List<Node> visitEmptyCond(XQueryParser.EmptyCondContext ctx) {
-
-        List<Node> res;
-        setContextMap(contextMap);
-        res = visit(ctx.xq());
-        ///TODO: BugFix, res.size() != 0 means NOT empty: should be TRUE [fixed]
-        if (res.size() != 0) return null;  // false
-        return DEFAULT_COND_TRUE_LIST;   // true
-    }
-
-    @Override
-    public List<Node> visitAndCond(XQueryParser.AndCondContext ctx) {
-        Map<String,List<Node>> currentContext = this.contextMap;
-        setContextMap(currentContext);
-        boolean bL = visit(ctx.cond(0)) != null; // not null -true /null -false
-        setContextMap(currentContext);
-        boolean bR = visit(ctx.cond(1)) != null; // not null -true
-        return bL && bR ? DEFAULT_COND_TRUE_LIST: null;
-    }
-
-    @Override
-    public List<Node> visitIsCond(XQueryParser.IsCondContext ctx) {
-
-        Map<String, List<Node>> currentCtxMap = contextMap;
-
-        setContextMap(currentCtxMap);
-        List<Node> l = visit(ctx.xq(0));
-        setContextMap(currentCtxMap);
-        List<Node> r = visit(ctx.xq(1));
-
-        for (Node ln: l) {
-            for (Node rn: r) {
-                if (ln.isSameNode(rn)) {
-                    return DEFAULT_COND_TRUE_LIST;  // true
-                }
-            }
-        }
-        return null; // false
-    }
-
-    @Override
-    public List<Node> visitEqCond(XQueryParser.EqCondContext ctx) {
-        Map<String, List<Node>> currentCtxMap = contextMap;
-
-        setContextMap(currentCtxMap);
-        List<Node> l = visit(ctx.xq(0));
-        setContextMap(currentCtxMap);
-        List<Node> r = visit(ctx.xq(1));
-
-        for (Node ln: l) {
-            for (Node rn: r) {
-                if (ln.isEqualNode(rn)) {
-                    return DEFAULT_COND_TRUE_LIST;  // true
-                }
-            }
-        }
-        return null; // false
-    }
-
-
-    @Override
-    public List<Node> visitNotCond(XQueryParser.NotCondContext ctx) {
-        boolean flag = visit(ctx.cond()) != null;
-        return flag ? null : DEFAULT_COND_TRUE_LIST;
-
-    }
-
-
-
-    // TODO: M3 - Join Implementation
-
-    private List<Node> obtainColumns(Node tuple) {
-        List<Node> columns= new LinkedList<>();
-        int childrenSize = tuple.getChildNodes().getLength();
-        for (int i = 0; i < childrenSize; ++i)
-            columns.add(tuple.getChildNodes().item(i));
-        return columns;
-    }
-
-    @Override
-    public List<Node> visitJoinClause(XQueryParser.JoinClauseContext ctx) {
-
-        List<Node> lTable = visit(ctx.xq(0));
-        List<Node> rTable = visit(ctx.xq(1));
-
-        String [] lAttrList = new String[ctx.idList(0).ID().size()];
-        String [] rAttrList = new String[ctx.idList(0).ID().size()];
-
-        for (int i = 0; i < ctx.idList(0).ID().size(); ++i) {
-            lAttrList[i] = ctx.idList(0).ID(i).getText();
-            rAttrList[i] = ctx.idList(1).ID(i).getText();
-        }
-
-        // build hashtable
-        HashMap<String, List<Node>> lHashTable = new HashMap<String, List<Node>>();
-        for (Node tuple: lTable) {
-            List<Node> cols = obtainColumns(tuple);
-            StringBuilder key = new StringBuilder();
-            for (String attr: lAttrList)
-                for (Node col: cols)
-                    if (attr.equals(col.getNodeName()))
-                        key.append(col.getChildNodes().item(0).getTextContent());
-
-            if (!lHashTable.containsKey(key.toString())) {
-                LinkedList<Node> value = new LinkedList<>();
-                value.add(tuple);
-                lHashTable.put(key.toString(), value);
-            } else {
-                lHashTable.get(key.toString()).add(tuple);
-            }
-        }
-
-
-        // perform join operation
-        List<Node> result = new LinkedList<>();
-        for (Node tuple: rTable) {
-
-            List<Node> cols = obtainColumns(tuple);
-            StringBuilder key = new StringBuilder();
-
-            for (String attr: rAttrList)
-                for (Node col: cols)
-                    if (attr.equals(col.getNodeName()))
-                        key.append(col.getChildNodes().item(0).getTextContent());
-
-            if (lHashTable.containsKey(key.toString())) {
-
-                List<Node> cResult = new LinkedList<>();
-
-                for (Node lNode: lHashTable.get(key.toString())) {
-                    List<Node> ccols = obtainColumns(lNode);
-                    List<Node> rcols = obtainColumns(tuple);
-                    ccols.addAll(rcols);
-
-                    result.add(makeElem("tuple", ccols));
-                }
-                result.addAll(cResult);
-            }
-        }
-        return result;
-    }
-
-    @Override public List<Node> visitJoinXQ(XQueryParser.JoinXQContext ctx) {
-        return visitChildren(ctx);
-    }
-
-
-
-
-
-    // Attention: this method will never be called.
-    @Override
-    public List<Node> visitStartTag(XQueryParser.StartTagContext ctx) {
-        return super.visitStartTag(ctx);
-    }
-
-    // Attention: this method will never be called.
-    @Override
-    public List<Node> visitEndTag(XQueryParser.EndTagContext ctx) {
-        return super.visitEndTag(ctx);
-    }
-
-
-    // Attention: this method will never be called.
-    @Override
-    public List<Node> visitVar(XQueryParser.VarContext ctx) {
-        return super.visitVar(ctx);
-    }
-
-    
-
-    // TODO: Read this! Attention: methods below should never be called! Do NOT change.
-
-    @Override
-    public List<Node> visitSingleAP(XQueryParser.SingleAPContext ctx) {
-        return super.visitSingleAP(ctx);
-    }
-
-    @Override
-    public List<Node> visitDoubleAP(XQueryParser.DoubleAPContext ctx) {
-        return super.visitDoubleAP(ctx);
-    }
-
-    @Override
-    public List<Node> visitDoc(XQueryParser.DocContext ctx) {
-        return super.visitDoc(ctx);
-    }
-
-    @Override
-    public List<Node> visitAttrRP(XQueryParser.AttrRPContext ctx) {
-        return super.visitAttrRP(ctx);
-    }
-
-    @Override
-    public List<Node> visitDoubleSlashRP(XQueryParser.DoubleSlashRPContext ctx) {
-        return super.visitDoubleSlashRP(ctx);
-    }
-
-    @Override
-    public List<Node> visitTextRP(XQueryParser.TextRPContext ctx) {
-        return super.visitTextRP(ctx);
-    }
-
-    @Override
-    public List<Node> visitParentRP(XQueryParser.ParentRPContext ctx) {
-        return super.visitParentRP(ctx);
-    }
-
-    @Override
-    public List<Node> visitSelfRP(XQueryParser.SelfRPContext ctx) {
-        return super.visitSelfRP(ctx);
-    }
-
-    @Override
-    public List<Node> visitFilterRP(XQueryParser.FilterRPContext ctx) {
-        return super.visitFilterRP(ctx);
-    }
-
-    @Override
-    public List<Node> visitCommaRP(XQueryParser.CommaRPContext ctx) {
-        return super.visitCommaRP(ctx);
-    }
-
-    @Override
-    public List<Node> visitChildrenRP(XQueryParser.ChildrenRPContext ctx) {
-        return super.visitChildrenRP(ctx);
-    }
-
-    @Override
-    public List<Node> visitTagRP(XQueryParser.TagRPContext ctx) {
-        return super.visitTagRP(ctx);
-    }
-
-    @Override
-    public List<Node> visitBracketRP(XQueryParser.BracketRPContext ctx) {
-        return super.visitBracketRP(ctx);
-    }
-
-    @Override
-    public List<Node> visitSingleSlashRP(XQueryParser.SingleSlashRPContext ctx) {
-        return super.visitSingleSlashRP(ctx);
-    }
-
-    @Override
-    public List<Node> visitEqFilter(XQueryParser.EqFilterContext ctx) {
-        return super.visitEqFilter(ctx);
-    }
-
-    @Override
-    public List<Node> visitNotFilter(XQueryParser.NotFilterContext ctx) {
-        return super.visitNotFilter(ctx);
-    }
-
-    @Override
-    public List<Node> visitAndFilter(XQueryParser.AndFilterContext ctx) {
-        return super.visitAndFilter(ctx);
-    }
-
-    @Override
-    public List<Node> visitBracketFilter(XQueryParser.BracketFilterContext ctx) {
-        return super.visitBracketFilter(ctx);
-    }
-
-    @Override
-    public List<Node> visitIsFilter(XQueryParser.IsFilterContext ctx) {
-        return super.visitIsFilter(ctx);
-    }
-
-    @Override
-    public List<Node> visitRpFilter(XQueryParser.RpFilterContext ctx) {
-        return super.visitRpFilter(ctx);
-    }
-
-    @Override
-    public List<Node> visitOrFilter(XQueryParser.OrFilterContext ctx) {
-        return super.visitOrFilter(ctx);
-    }
-
-    @Override
-    public List<Node> visitTagName(XQueryParser.TagNameContext ctx) {
-        return super.visitTagName(ctx);
-    }
-
-    @Override
-    public List<Node> visitAttrName(XQueryParser.AttrNameContext ctx) {
-        return super.visitAttrName(ctx);
-    }
-
-    @Override
-    public List<Node> visitFileName(XQueryParser.FileNameContext ctx) {
-        return super.visitFileName(ctx);
     }
 }
