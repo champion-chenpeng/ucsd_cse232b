@@ -15,16 +15,17 @@ import java.util.*;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
-
-/**
- * @author rx_w@outlook.com
- * @version 1.0
- * @date 2/20/22 12:28 PM
- * @description
- */
-
+ /**
+  * @author Peng Chen, Hanqing Zhao
+  * @version 1.0
+  * @date 02/23/2024
+  * @description
+  */
 public class CondEngine extends XQueryBaseVisitor<Boolean> {
-	public XQueryEngine xqueryEngine;
+	private XQueryEngine xqueryEngine;
+	public CondEngine(XQueryEngine xqueryEngine_) {
+		this.xqueryEngine = xqueryEngine_;
+	}
 
     @Override
     public Boolean visitEqCond(XQueryParser.EqCondContext ctx) {
