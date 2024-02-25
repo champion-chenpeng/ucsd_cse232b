@@ -28,9 +28,9 @@ rp  : tagName       #tagRP
 
 //filter
 f   : rp        #rpFilter
-    | rp eq rp  #eqFilter
+    | rp EQ rp  #eqFilter
     | rp IS rp  #isFilter
-	| rp '=' '"' stringConstant '"' #stringFilter
+	| rp '=' stringCondition #stringFilter
     | '(' f ')' #bracketFilter
     | f 'and' f #andFilter
     | f 'or' f  #orFilter
@@ -39,11 +39,12 @@ f   : rp        #rpFilter
 
 tagName : ID;
 attrName : ID;
-stringConstant: ID;
+stringCondition : StringConstant;
 
-eq: '=' | 'eq';
+EQ: '=' | 'eq';
 IS  : '==' | 'is';
 ID  : [a-zA-Z0-9_-]+ ;
+StringConstant: '"'+[a-zA-Z0-9,.!?; '"-]+'"';
 
 fileName    : FILENAME;
 FILENAME    : [a-zA-Z0-9._]+;

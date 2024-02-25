@@ -65,7 +65,9 @@ public class FilterEngine extends XPathBaseVisitor<Boolean> {
     public Boolean visitStringFilter(XPathParser.StringFilterContext ctx) {
 		engine.setPNode(paramNode);
         List<Node> res1 = engine.visit(ctx.rp());
-		String stringConstant = ctx.stringConstant().ID().getText();
+		String stringConstant = ctx.stringCondition().StringConstant().getText();
+		stringConstant = stringConstant.substring(1, stringConstant.length() - 1);
+		System.out.println("StringConstant: " + stringConstant);
         for (Node x : res1) {
             if (x.getTextContent().equals(stringConstant)) {
                 return true;
