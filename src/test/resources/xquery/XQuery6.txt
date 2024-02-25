@@ -1,0 +1,1 @@
+<result>{doc("j_caesar.xml")//ACT[not .//SPEAKER/text() = "CAESAR"]}</result>
