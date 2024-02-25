@@ -16,7 +16,7 @@ import java.util.List;
  */
 public class AppTest 
 {
-	private int NXPathCase = 0, NXQueryCase = 2;
+	private int NXPathCase = 10, NXQueryCase = 2;
     /**
 	 * Test whether the pipeline runs well
      */
@@ -24,7 +24,8 @@ public class AppTest
 	public void XPathQueryTest() {
 		try {
 			for (int i = 0; i < NXPathCase; i++) {
-				Main.main(new String[] { "src/test/resources/xpath/XPath%d.txt".formatted(i), "target/test-classes/XPath%d_result.xml".formatted(i) });
+				System.out.println("Query file %d".formatted(i));
+				Main.main(new String[] { "src/test/resources/xquery/xpath/XPath%d.txt".formatted(i), "target/test-classes/XPath%d_result.xml".formatted(i) });
 			}
 		} catch (Exception e) {
 			throw new RuntimeException(e);
