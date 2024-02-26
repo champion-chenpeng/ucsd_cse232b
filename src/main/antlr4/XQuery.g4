@@ -19,7 +19,7 @@ whereClause : 'where' cond ;
 returnClause : 'return' xq ;
 joinClause: 'join' '(' xq ',' xq ',' idList ',' idList ')';
 
-cond : xq eq xq                                                  #eqCond
+cond : xq ('=' | 'eq') xq                                                  #eqCond
      | xq IS xq                                                  #isCond
      | 'empty' '(' xq ')'                                           #emptyCond
      | 'some' var 'in' xq (',' var 'in' xq)* 'satisfies' cond    #satisfyCond
@@ -32,6 +32,5 @@ cond : xq eq xq                                                  #eqCond
 startTag: '<' tagName '>';
 endTag: '<' '/' tagName '>';
 var: '$' ID;
-StringConstant: '"'+[a-zA-Z0-9,.!?; '"-]+'"';
 
 idList: '[' ID (',' ID)* ']' | '[' ']';

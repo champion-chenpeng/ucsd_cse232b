@@ -16,7 +16,7 @@ import java.util.List;
  */
 public class AppTest 
 {
-	private int NXPathCase = 0, NXQueryCase = 2;
+	private int NXPathCase = 10, NXQueryCase = 2;
     /**
 	 * Test whether the pipeline runs well
      */
@@ -24,7 +24,8 @@ public class AppTest
 	public void XPathQueryTest() {
 		try {
 			for (int i = 0; i < NXPathCase; i++) {
-				Main.main(new String[] { "src/test/resources/xpath/XPath%d.txt".formatted(i), "target/test-classes/XPath%d_result.xml".formatted(i) });
+				System.out.println("Query xpath file %d".formatted(i));
+				Main.main(new String[] { "src/test/resources/xquery/xpath/XPath%d.txt".formatted(i), "target/test-classes/XPath%d_result.xml".formatted(i) });
 			}
 		} catch (Exception e) {
 			throw new RuntimeException(e);
@@ -35,7 +36,7 @@ public class AppTest
 	public void XPathContentCompareTest() {
 		try {
 			for (int i = 0; i < NXPathCase; i++) {
-				System.out.println("Compare File %d".formatted(i));
+				System.out.println("Compare xpath File %d".formatted(i));
 				InputStream ResultInStream = new FileInputStream("target/test-classes/XPath%d_result.xml".formatted(i));
 				InputStream RefInStream = new FileInputStream("src/test/resources/xpath/XPath%d_result_standard.xml".formatted(i));
 				assert(IOUtils.contentEquals(RefInStream, ResultInStream));	
@@ -48,6 +49,7 @@ public class AppTest
 	public void XQueryTest() {
 		try {
 			for (int i = 0; i < NXQueryCase; i++) {
+				System.out.println("Query xquery file %d".formatted(i));
 				Main.main(new String[] { "src/test/resources/xquery/XQuery%d.txt".formatted(i), "target/test-classes/XQuery%d_result.xml".formatted(i) });
 			}
 		} catch (Exception e) {
