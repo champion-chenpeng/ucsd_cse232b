@@ -29,6 +29,7 @@ import javax.xml.transform.stream.StreamResult;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.Charset;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -81,24 +82,7 @@ public class XMLProcessor {
     public static Document generateResultXML(List<Node> rawResult) throws ParserConfigurationException {
         DocumentBuilder bd = docBldFactory.newDocumentBuilder();
         Document outputDoc = bd.newDocument();
-//        if (rawResult.isEmpty()) {
-//			return outputDoc;
-//        }
-//
-//        Element resultEle = outputDoc.createElement("RESULT");
-//        outputDoc.appendChild(resultEle);
-//
-//        for (Node old : rawResult) {
-//            try {
-//                Node newNode = outputDoc.importNode(old, true);
-//                resultEle.appendChild(newNode);
-//            } catch (DOMException e) {
-//                if (e.code != DOMException.NOT_SUPPORTED_ERR) {
-//                    throw e;
-//                }
-//                // Handle the case when the node cannot be imported (optional).
-//            }
-//        }
+
         if (!rawResult.isEmpty()) {
             // Import the first node from the rawResult list into the new Document
             Node importedNode = outputDoc.importNode(rawResult.get(0), true);
@@ -114,6 +98,7 @@ public class XMLProcessor {
         Transformer transformer = transformerFactory.newTransformer();
         transformer.setOutputProperty(OutputKeys.INDENT, "yes");
         transformer.setOutputProperty("{https://xml.apache.org/xslt}indent-amount", "2");
+        //transformer.setOutputProperty(OutputKeys.ENCODING, "US-ASCII");
         transformer.transform(new DOMSource(outputDoc),new StreamResult(oStream));
     }
 
