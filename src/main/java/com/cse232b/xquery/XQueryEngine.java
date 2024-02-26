@@ -7,6 +7,7 @@ import com.cse232b.antlr4.XPathParser.RpContext;
 import com.cse232b.antlr4.XQueryBaseVisitor;
 import com.cse232b.antlr4.XQueryParser;
 import com.cse232b.xpath.XPathEngine;
+import org.antlr.v4.runtime.misc.Interval;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -131,7 +132,9 @@ public class XQueryEngine extends XQueryBaseVisitor<List<Node>>{
     @Override
     public List<Node> visitApXQ(XQueryParser.ApXQContext ctx) {
         setContextMap(contextMap);
-        String apText = ctx.getText();
+		int a = ctx.start.getStartIndex(), b = ctx.stop.getStopIndex();
+		Interval interval = new Interval(a, b);
+		String apText = ctx.start.getInputStream().getText(interval);
         InputStream is = new ByteArrayInputStream(apText.getBytes());
 		ApContext ap = XMLProcessor.parseXPathAp(is);
         return xpathEngine.visit(ap);
