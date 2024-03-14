@@ -1,4 +1,0 @@
-<result>{
-doc("j_caesar.xml")//ACT[SCENE [SPEECH/SPEAKER/text() = "CAESAR"][SPEECH/SPEAKER/text() = "BRUTUS"]]
-
-}</result>

@@ -1,3 +1,0 @@
-<result>{
-doc("j_caesar.xml")//(ACT/SCENE/SPEECH)/(SPEAKER)/../.[not (./../TITLE==./LINE)]/../TITLE
-}</result>

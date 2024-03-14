@@ -1,3 +1,0 @@
-<result>{
-doc("j_caesar.xml")//SPEECH/SPEAKER[./text()]/../*/.././../../../TITLE
-}</result>

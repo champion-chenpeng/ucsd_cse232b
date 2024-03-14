@@ -1,3 +1,0 @@
-<result>{
-doc("j_caesar.xml")//ACT[not ((./TITLE)==(./TITLE) or (./SCENE/TITLE==./SCENE/TITLE))]/*/SPEECH/../TITLE
-}</result>
