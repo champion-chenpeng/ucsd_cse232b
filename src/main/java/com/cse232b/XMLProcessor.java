@@ -81,12 +81,23 @@ public class XMLProcessor {
         DocumentBuilder bd = docBldFactory.newDocumentBuilder();
         Document outputDoc = bd.newDocument();
 
-        if (!rawResult.isEmpty()) {
-            // Import the first node from the rawResult list into the new Document
-            Node importedNode = outputDoc.importNode(rawResult.get(0), true);
+        if (rawResult.isEmpty()) {
+            return outputDoc;
+        }
 
-            // Append the importedNode directly to the outputDoc, making it the root element
-            outputDoc.appendChild(importedNode);
+        Element resultEle = outputDoc.createElement("RESULT");
+        outputDoc.appendChild(resultEle);
+
+        for (Node old : rawResult) {
+            try {
+                Node newNode = outputDoc.importNode(old, true);
+                resultEle.appendChild(newNode);
+            } catch (DOMException e) {
+                if (e.code != DOMException.NOT_SUPPORTED_ERR) {
+                    throw e;
+                }
+                // Handle the case when the node cannot be imported (optional).
+            }
         }
 
         return outputDoc;
