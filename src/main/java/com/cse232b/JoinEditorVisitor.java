@@ -1,4 +1,4 @@
-package com.cse232b.xquery;
+package com.cse232b;
 
 import com.cse232b.antlr4.XQueryBaseVisitor;
 import com.cse232b.antlr4.XQueryParser;

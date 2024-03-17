@@ -1,16 +1,13 @@
-package com.cse232b.xquery;
+package com.cse232b;
 
+import com.cse232b.JoinEditorVisitor;
 import com.cse232b.antlr4.XQueryLexer;
 import com.cse232b.antlr4.XQueryParser;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
-import org.w3c.dom.Node;
 
-import javax.xml.parsers.DocumentBuilder;
 import java.io.*;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * @author Hanqing Zhao, Peng Chen

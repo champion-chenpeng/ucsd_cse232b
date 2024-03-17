@@ -1,8 +1,9 @@
-package com.cse232b.xquery;
+package com.cse232b;
 
 import com.cse232b.XMLProcessor;
 import com.cse232b.antlr4.XQueryLexer;
 import com.cse232b.antlr4.XQueryParser;
+import com.cse232b.xquery.XQueryEngine;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
