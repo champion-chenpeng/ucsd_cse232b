@@ -206,4 +206,76 @@ public class XQueryEngine extends XQueryBaseVisitor<List<Node>>{
 		return res2;
     }
 
+     // TODO: M3 - Join Implementation
+
+     private List<Node> obtainColumns(Node tuple) {
+         List<Node> columns= new LinkedList<>();
+         int childrenSize = tuple.getChildNodes().getLength();
+         for (int i = 0; i < childrenSize; ++i)
+             columns.add(tuple.getChildNodes().item(i));
+         return columns;
+     }
+
+     @Override
+     public List<Node> visitJoinClause(XQueryParser.JoinClauseContext ctx) {
+
+         List<Node> lTable = visit(ctx.xq(0));
+         List<Node> rTable = visit(ctx.xq(1));
+
+         String [] lAttrList = new String[ctx.idList(0).ID().size()];
+         String [] rAttrList = new String[ctx.idList(0).ID().size()];
+
+         for (int i = 0; i < ctx.idList(0).ID().size(); ++i) {
+             lAttrList[i] = ctx.idList(0).ID(i).getText();
+             rAttrList[i] = ctx.idList(1).ID(i).getText();
+         }
+
+         // build hashtable
+         HashMap<String, List<Node>> lHashTable = new HashMap<String, List<Node>>();
+         for (Node tuple: lTable) {
+             List<Node> cols = obtainColumns(tuple);
+             StringBuilder key = new StringBuilder();
+             for (String attr: lAttrList)
+                 for (Node col: cols)
+                     if (attr.equals(col.getNodeName()))
+                         key.append(col.getChildNodes().item(0).getTextContent());
+
+             if (!lHashTable.containsKey(key.toString())) {
+                 LinkedList<Node> value = new LinkedList<>();
+                 value.add(tuple);
+                 lHashTable.put(key.toString(), value);
+             } else {
+                 lHashTable.get(key.toString()).add(tuple);
+             }
+         }
+
+
+         // perform join operation
+         List<Node> result = new LinkedList<>();
+         for (Node tuple: rTable) {
+
+             List<Node> cols = obtainColumns(tuple);
+             StringBuilder key = new StringBuilder();
+
+             for (String attr: rAttrList)
+                 for (Node col: cols)
+                     if (attr.equals(col.getNodeName()))
+                         key.append(col.getChildNodes().item(0).getTextContent());
+
+             if (lHashTable.containsKey(key.toString())) {
+
+                 List<Node> cResult = new LinkedList<>();
+
+                 for (Node lNode: lHashTable.get(key.toString())) {
+                     List<Node> ccols = obtainColumns(lNode);
+                     List<Node> rcols = obtainColumns(tuple);
+                     ccols.addAll(rcols);
+
+                     result.add(makeElem("tuple", ccols));
+                 }
+                 result.addAll(cResult);
+             }
+         }
+         return result;
+     }
 }
