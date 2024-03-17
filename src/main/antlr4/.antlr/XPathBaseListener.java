@@ -1,4 +1,4 @@
-// Generated from /Users/champion/Library/CloudStorage/OneDrive-UCSanDiego/UCSD/Course/wi24/cse232b/XPathEvaluator/src/main/antlr4/XPath.g4 by ANTLR 4.13.1
+// Generated from /Users/champion/Library/CloudStorage/OneDrive-UCSanDiego/UCSD/Course/wi24/cse232b/ucsd_cse232b/src/main/antlr4/XPath.g4 by ANTLR 4.13.1
 
     package com.cse232b.antlr4;
 
@@ -307,13 +307,13 @@ public class XPathBaseListener implements XPathListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterStringConstant(XPathParser.StringConstantContext ctx) { }
+	@Override public void enterStringCondition(XPathParser.StringConditionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitStringConstant(XPathParser.StringConstantContext ctx) { }
+	@Override public void exitStringCondition(XPathParser.StringConditionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

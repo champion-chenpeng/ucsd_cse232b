@@ -82,30 +82,18 @@ public class Main
 
     private static void editXQueryToJoin(String xQueryFilePath, String outputPath) {
         String reWriteRes = "";
-        try (InputStream xQueryIStream = new FileInputStream(xQueryFilePath)){
+        try (InputStream xQueryIStream = Files.newInputStream(Paths.get(xQueryFilePath))){
             reWriteRes = XQueryEditor.rewriteToJoinXquery(xQueryFilePath, xQueryIStream);
         }catch (IOException e) {
             System.err.println("open xQuery file failed: " + e.getMessage());
         } catch (Exception e) {
             System.err.println("rewrite xquery failed : " + e.getMessage());
         }
-        File file =new File(outputPath);
 
-        //if file doesnt exists, then create it
-        if(!file.exists()){
-            try {
-                file.createNewFile();
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            }
-        }
-
-        //true = append file
-        try (            FileWriter fileWriter = new FileWriter(file.getName());
-                         BufferedWriter bufferWriter = new BufferedWriter(fileWriter)){
-            bufferWriter.write(reWriteRes);
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
+        try (PrintWriter out = new PrintWriter(outputPath)) {
+            out.println(reWriteRes);
+        } catch (FileNotFoundException e) {
+            System.err.println("rewrite to file not found!");
         }
     }
 }

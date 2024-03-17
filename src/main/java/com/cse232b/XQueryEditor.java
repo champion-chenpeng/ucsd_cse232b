@@ -8,6 +8,7 @@ import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 
 import java.io.*;
+import java.nio.file.Files;
 
 /**
  * @author Hanqing Zhao, Peng Chen
@@ -24,31 +25,20 @@ public class XQueryEditor {
         }
         return res;
     }
+
     private static String readToString(File file) {
-        long fileLength = file.length();
-        byte[] fileContent = new byte[(int) fileLength];
         try {
-            FileInputStream in = new FileInputStream(file);
-            in.read(fileContent);
-            in.close();
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
+            // Read all bytes from the file and convert to String
+            return new String(Files.readAllBytes(file.toPath()));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return new String(fileContent);
     }
 
     static String exeJoinWrite(InputStream inputStream) {
         try {
-            CharStream cs = CharStreams.fromStream(inputStream);
-            XQueryLexer lexer = new XQueryLexer(cs);
-            CommonTokenStream tks = new CommonTokenStream(lexer);
-            XQueryParser parser = new XQueryParser(tks);
-            parser.removeErrorListeners();
             JoinEditorVisitor visitor = new JoinEditorVisitor();
-            String res = visitor.visit(parser.xq());
-            return res;
+            return visitor.visit(XMLProcessor.parseXQuery(inputStream));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

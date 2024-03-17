@@ -47,6 +47,6 @@ ID  : [a-zA-Z0-9_-]+ ;
 StringConstant: '"'+[a-zA-Z0-9,.!?; '"-]+'"';
 
 fileName    : FILENAME;
-FILENAME    : [a-zA-Z0-9._]+;
+FILENAME    : [a-zA-Z0-9._-]+;
 
 WHITESPACE  : [ \t\r\n]+ -> skip;
