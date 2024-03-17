@@ -80,14 +80,19 @@ public class XMLProcessor {
 	public static Document generateResultXML(List<Node> rawResult) throws ParserConfigurationException {
         DocumentBuilder bd = docBldFactory.newDocumentBuilder();
         Document outputDoc = bd.newDocument();
+		Node root;
 
-        if (!rawResult.isEmpty()) {
-            // Import the first node from the rawResult list into the new Document
-            Node importedNode = outputDoc.importNode(rawResult.get(0), true);
-
-            // Append the importedNode directly to the outputDoc, making it the root element
-            outputDoc.appendChild(importedNode);
-        }
+		if (rawResult.size() == 1) {
+            root = outputDoc.importNode(rawResult.get(0), true);
+		} else {
+			root = outputDoc.createElement("RESULT");
+			for (Node child : rawResult) {
+				Node childNode = outputDoc.importNode(child, true);
+				root.appendChild(childNode);
+			}
+		}
+            // Append the root directly to the outputDoc, making it the root element
+        outputDoc.appendChild(root);
 
         return outputDoc;
     }
