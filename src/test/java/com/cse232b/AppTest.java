@@ -16,7 +16,7 @@ import java.util.List;
  */
 public class AppTest 
 {
-	private int NXPathCase = 10, NXQueryCase = 2;
+	private int NXPathCase = 0, NXQueryCase = 2;
     /**
 	 * Test whether the pipeline runs well
      */
