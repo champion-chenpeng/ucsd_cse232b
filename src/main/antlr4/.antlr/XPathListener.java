@@ -1,4 +1,4 @@
-// Generated from /Users/champion/Library/CloudStorage/OneDrive-UCSanDiego/UCSD/Course/wi24/cse232b/XPathEvaluator/src/main/antlr4/XPath.g4 by ANTLR 4.13.1
+// Generated from /Users/champion/Library/CloudStorage/OneDrive-UCSanDiego/UCSD/Course/wi24/cse232b/ucsd_cse232b/src/main/antlr4/XPath.g4 by ANTLR 4.13.1
 
     package com.cse232b.antlr4;
 
@@ -292,15 +292,15 @@ public interface XPathListener extends ParseTreeListener {
 	 */
 	void exitAttrName(XPathParser.AttrNameContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link XPathParser#stringConstant}.
+	 * Enter a parse tree produced by {@link XPathParser#stringCondition}.
 	 * @param ctx the parse tree
 	 */
-	void enterStringConstant(XPathParser.StringConstantContext ctx);
+	void enterStringCondition(XPathParser.StringConditionContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link XPathParser#stringConstant}.
+	 * Exit a parse tree produced by {@link XPathParser#stringCondition}.
 	 * @param ctx the parse tree
 	 */
-	void exitStringConstant(XPathParser.StringConstantContext ctx);
+	void exitStringCondition(XPathParser.StringConditionContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link XPathParser#fileName}.
 	 * @param ctx the parse tree
