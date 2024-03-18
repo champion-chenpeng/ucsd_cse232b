@@ -1,11 +1,11 @@
-package com.cse232b;
+package com.cse232b.rewrite;
 
 import com.cse232b.antlr4.XQueryBaseVisitor;
 import com.cse232b.antlr4.XQueryParser;
 
 import java.util.*;
 
-public class JoinEditorVisitor extends XQueryBaseVisitor<String> {
+public class RewriterEngine extends XQueryBaseVisitor<String> {
     public static final String NO_CHANGE_MARK = "original";
 
     private void addReturnClause(HashMap<Integer, String> finalForgp, HashMap<Integer, LinkedList<String>> gpVar){

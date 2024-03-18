@@ -60,7 +60,7 @@ public class AppTest
 				System.out.printf("Rewrite XQuery %d%n", i);
 				String inputFile = "src/test/resources/" + type + "/query/query%d.txt".formatted(i);
 				String outputFile = "target/test-classes/" + type + "%d.txt".formatted(i);
-				Main.main(new String[] { "edit", inputFile, outputFile});
+				Main.main(new String[] { "rewrite", inputFile, outputFile});
 			}
 		} catch (Exception e) {
 			throw new RuntimeException(e);
@@ -74,7 +74,7 @@ public class AppTest
 				System.out.println("Query " + type + " file %d".formatted(i));
 				String inputFile = "target/test-classes/" + type + "%d.txt".formatted(i);
 				String outputFile = "target/test-classes/" + type + "%d.xml".formatted(i);
-				Main.main(new String[] {"eval", inputFile, outputFile});
+				Main.main(new String[] {"evaluate", inputFile, outputFile});
 			}
 		} catch (Exception e) {
 			throw new RuntimeException(e);

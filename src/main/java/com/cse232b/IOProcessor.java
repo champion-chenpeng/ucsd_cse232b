@@ -10,9 +10,7 @@ import com.cse232b.antlr4.XQueryParser.XqContext;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
-import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -38,21 +36,21 @@ import java.util.List;
  * @date 1/29/24 3:39 PM
  * @description
  */
-public class XMLProcessor {
+public class IOProcessor {
     public static final String DEFAULT_DTD_FILE_NAME = "play.dtd";
     static DocumentBuilderFactory docBldFactory = DocumentBuilderFactory.newInstance();
     static TransformerFactory transformerFactory = TransformerFactory.newInstance();
 
 
-    public static List<Node> parse(String xmlFileNameInXPath)
+    public static List<Node> parseXMLToNodes(String xmlFileNameInXPath)
             throws ParserConfigurationException, IOException, SAXException {
-        try (InputStream dataFileStream = XMLProcessor.class.getClassLoader().getResourceAsStream(xmlFileNameInXPath);
-             InputStream dtdFileStream = XMLProcessor.class.getClassLoader().getResourceAsStream(DEFAULT_DTD_FILE_NAME)) {
+        try (InputStream dataFileStream = IOProcessor.class.getClassLoader().getResourceAsStream(xmlFileNameInXPath);
+             InputStream dtdFileStream = IOProcessor.class.getClassLoader().getResourceAsStream(DEFAULT_DTD_FILE_NAME)) {
             return loadXMLDataFileToDomNodes(dataFileStream, dtdFileStream);
         }
     }
 
-    public static void serialize(List<Node> rawResult, OutputStream oStream)
+    public static void serializeNodesToXML(List<Node> rawResult, OutputStream oStream)
             throws ParserConfigurationException, TransformerException {
         Document doc = generateResultXML(rawResult);
         writeXMLDoc(doc, oStream);

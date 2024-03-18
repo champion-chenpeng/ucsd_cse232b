@@ -1,6 +1,6 @@
 package com.cse232b.xpath;
 
-import com.cse232b.XMLProcessor;
+import com.cse232b.IOProcessor;
 
 import com.cse232b.antlr4.XPathBaseVisitor;
 import com.cse232b.antlr4.XPathParser;
@@ -22,7 +22,7 @@ public class XPathEngine extends XPathBaseVisitor<List<Node>> {
     @Override
     public List<Node> visitDoc(XPathParser.DocContext ctx) {
         try {
-            return XMLProcessor.parse(ctx.fileName().FILENAME().getText());
+            return IOProcessor.parseXMLToNodes(ctx.fileName().FILENAME().getText());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

@@ -1,21 +1,12 @@
 package com.cse232b.xquery;
 
-import com.cse232b.XMLProcessor;
-import com.cse232b.antlr4.XPathParser.ApContext;
-import com.cse232b.antlr4.XPathParser.RpContext;
-
 import com.cse232b.antlr4.XQueryBaseVisitor;
 import com.cse232b.antlr4.XQueryParser;
-import com.cse232b.xpath.XPathEngine;
-import org.w3c.dom.Document;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 import java.util.*;
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 
- /**
+/**
   * @author Peng Chen, Hanqing Zhao
   * @version 1.0
   * @date 02/23/2024
@@ -23,7 +14,7 @@ import java.io.InputStream;
   */
 
 public class ClauseEngine extends XQueryBaseVisitor<List<Node>>{
-	private XQueryEngine xqueryEngine;
+	private final XQueryEngine xqueryEngine;
     private final List<Node> DEFAULT_COND_TRUE_LIST = new ArrayList<>(0);
     private List<Map<String, List<Node>>> forClausePerStates = new ArrayList<>();
 	public ClauseEngine(XQueryEngine xqueryEngine_) {

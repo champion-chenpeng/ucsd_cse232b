@@ -1,6 +1,6 @@
 package com.cse232b.xquery;
 
-import com.cse232b.XMLProcessor;
+import com.cse232b.IOProcessor;
 import com.cse232b.antlr4.XPathParser.ApContext;
 import com.cse232b.antlr4.XPathParser.RpContext;
 
@@ -101,7 +101,7 @@ public class XQueryEngine extends XQueryBaseVisitor<List<Node>>{
 
 		List<Node> res1 = visit(ctx.xq());
 		LinkedList<Node> res2 = new LinkedList<>(); 
-		RpContext rp = XMLProcessor.parseXPathRp(i);
+		RpContext rp = IOProcessor.parseXPathRp(i);
 		for (Node node : res1) {
 			xpathEngine.rpEngine.setPNode(node);
 			res2.addAll(xpathEngine.rpEngine.visit(rp));
@@ -136,7 +136,7 @@ public class XQueryEngine extends XQueryBaseVisitor<List<Node>>{
 		Interval interval = new Interval(a, b);
 		String apText = ctx.start.getInputStream().getText(interval);
         InputStream is = new ByteArrayInputStream(apText.getBytes());
-		ApContext ap = XMLProcessor.parseXPathAp(is);
+		ApContext ap = IOProcessor.parseXPathAp(is);
         return xpathEngine.visit(ap);
     }
 
@@ -147,8 +147,7 @@ public class XQueryEngine extends XQueryBaseVisitor<List<Node>>{
         clauseEngine.visit(ctx.letClause());
         Map<String,List<Node>> currentContext = this.contextMap;
         setContextMap(currentContext);
-        List<Node> res = visit(ctx.xq());
-        return res;
+        return visit(ctx.xq());
 
     }
 
@@ -169,7 +168,7 @@ public class XQueryEngine extends XQueryBaseVisitor<List<Node>>{
         setContextMap(contextMap);
         // TODO: bugfix, get terminate node ID's text as key [fixed]
         // TODO: bugfix, change get method to getOrDefault method so as to avoid null return value [fixed]
-        return this.contextMap.getOrDefault(ctx.var().ID().getText(), new LinkedList<Node>());
+        return this.contextMap.getOrDefault(ctx.var().ID().getText(), new LinkedList<>());
     }
 
     @Override
@@ -198,7 +197,7 @@ public class XQueryEngine extends XQueryBaseVisitor<List<Node>>{
 
         List<Node> xqRes = getSelfAndDescendents(visit(ctx.xq()));  // get the proper context nodes for rp parsing
 		LinkedList<Node> res2 = new LinkedList<>(); 
-		RpContext rp = XMLProcessor.parseXPathRp(i);
+		RpContext rp = IOProcessor.parseXPathRp(i);
 		for (Node node : xqRes) {
 			xpathEngine.rpEngine.setPNode(node);
 			res2.addAll(xpathEngine.rpEngine.visit(rp));
